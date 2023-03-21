@@ -25,19 +25,21 @@ For now, you need to install it manually:
 <br clear="both"/>
 
 ## Configuration
-### Minimal configuration example
+### Minimal example
 <img align="right" width="300" alt="A temperature display heat map" src="images/temperature.png">
 
-The card will try to figure out how to present data
-based on the [device type](https://www.home-assistant.io/integrations/sensor/) of the
-requested entity:
+Given a minimal config, the card will try to figure out how to present data in a somewhat sane way:
 
 ```
 type: custom:heatmap-card
 entity: sensor.aranet_uppe_temperature
 ```
 
-It'll pick a card `title` based on the name of the entity, present 21 days worth of data and pick a color scheme and scale based on the [device type](https://www.home-assistant.io/integrations/sensor/).
+It'll pick a card `title` based on the name of the entity, present 21 days worth of data and pick a color scheme and scale based on the entity [device type](https://www.home-assistant.io/integrations/sensor/).
+
+It's a bit opinionated in what a "good" scale will be, and _may_ give you something that's not really fit for your usage (for instance by assuming that temperature sensor data refers to _indoor_ temperature).
+
+That said, for a lot of data types, it should give you something workable out of the box.
 
 <br clear="both"/>
 

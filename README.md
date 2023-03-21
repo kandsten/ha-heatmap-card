@@ -27,6 +27,7 @@ For now, you need to install it manually:
 ## Configuration
 ### Minimal configuration example
 <img align="right" width="300" alt="A temperature display heat map" src="images/temperature.png">
+
 The card will try to figure out how to present data
 based on the [device type](https://www.home-assistant.io/integrations/sensor/) of the
 requested entity:

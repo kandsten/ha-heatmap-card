@@ -22,6 +22,31 @@
 */
 
 /*
+    * General code layout *
+
+    There are three routines whose quirks drive the overall design and quirks:
+      - render(): Displays the actual card contents. Called infrequently. All
+                  HTML templating is captured in this and related routines. We
+                  also do some config checking here and render errors if we
+                  detect that we're inside of the card editor; this is fugly, but
+                  as we don't have access to the hass object in setConfig(), this
+                  seemed like a necessary evil.
+
+      - set hass(): Called by HA's UI rather frequently, so we make sure to
+                    cache aggressively. On load (rendering our tag) + after
+                    config changes, we're:
+                      - Calling populate_meta()
+                        to setup some values based on the HA configuration + our
+                        card configuration, with defaults as applicable.
+                      - Fetch the data to drive the heatmap from the recorder.
+
+      - setConfig(): Called by HA's UI when the card is first displayed
+                     and again when the config changes. Note that it's called
+                     *before* set hass(), meaning we can't use the hass object
+                     to validate our config, annoyingly enough.
+*/
+
+/*
     Use lit from Home Assistant rather than by sourcing it externally.
     This is not recommended practice (per HA blog entry, below), but it
     does seem to make some sense. Will deal with external sourcing
@@ -35,7 +60,7 @@ const css = LitElement.prototype.css;
 
 
 class HeatmapCard extends LitElement {
-    #rendered = false;
+    hass_inited = false;
     static get properties() {
         return {
             hass: {},
@@ -43,50 +68,58 @@ class HeatmapCard extends LitElement {
             grid: [],
             meta: {},
             tooltipOpen: false,
-            selected_val: '',
-            legend_gradient: 'black, white'
+            selected_val: ''
         };
     }
 
-    /* Todo: Error checking for if the domain.length != colors.length */
-    /* Todo: possibly also consider supporting other options for chromajs */
-    generate_scale(config) {
-        /*
-            Are we refering to one of the builtin types by name? Resolve it
-        */
-        if (typeof(config) === 'string') {
-            if (this.builtin_scales[config] === undefined) {
-                return null
-            } else {
-                config = this.builtin_scales[config];
+    render() {
+        // We may be trying to render before we've received the recorder data.
+        if (this.grid === undefined) { this.grid = []; }
+        // We're in the editor interface. Check for config errors that we can't check for in setConfig since
+        // don't have the hass object reliably available in that function.
+        if (this.parentNode.nodeName === 'HUI-CARD-PREVIEW') {
+            if (this.meta.state_class === 'total_increasing' && this.meta.inferred_scale === true && this.config.data.infer !== true) {
+                return html`<span class="error"><p>Error: Your entity is displaying consumption data (kWh of energy, m³ of gas, similar)
+                but your card configuration is lacking a value for <code>data.max</code>. This will cause the heatmap colors to re-scale
+                based on the currently shown values in the table rather than maintain consistency over time.</p>
+                <p>Either set <code>data.max</code> to the expected maximum value or set <code>data.infer</code> to <code>true</code>
+                to accept this re-scaling.</p>
+                </span>`
             }
-        };
-
-        var colors = [];
-        var domains = [];
-        for (const step of config.steps) {
-            colors.push(step.color);
-            if ('value' in step) {
-                domains.push(step.value)
+            else if (this.meta.state_class === undefined) {
+                return html`<span class="error"<p>Error: This entity is not a sensor. Only sensors are supported currently.</p></span>`
             }
         }
-        var gradient;
-        if (domains.length > 0 && domains.length == colors.length) {
-            gradient = chroma.scale(colors).domain(domains);
-        } else {
-            gradient = chroma.scale(colors);
-        }
-        return {
-            'gradient': gradient,
-            'scale': config['scale'],
-            'name': config['name'],
-            'steps': config['steps']
-        }
-    }
-
-    localize(label, fallback = 'Unknown') {
-        const resources = this.myhass.resources[this.meta.language];
-        return resources && resources[label] ? resources[label] : fallback;
+        return html`
+            <ha-card header="${this.meta.title}" id="card">
+                <div class="card-content">
+                    <table>
+                        <tr class="first">
+                            <th class="hm-row-title">${this.localize('ui.dialogs.helper_settings.input_datetime.date', 'Date')}</th>
+                            ${this.date_table_headers()}
+                        </tr>
+                    ${this.grid.map((entry) => 
+                        html`<tr>
+                            <td class="hm-row-title">${entry.date}</td>
+                            ${entry.vals.map((util) => {
+                                var css_class="hm-box";
+                                var r = util;
+                                if (r === null) { css_class += " null"; }
+                                if (this.meta.scale.type === 'relative') {
+                                    r = util / this.meta.data.max;
+                                    if (r > 1) { r = 1 };
+                                }
+                                const col = this.meta.scale.gradient(r);
+                                return html`<td @click="${this.toggle_tooltip}" class="${css_class}" data-val="${util}" style="color: ${col}"></td>`
+                            })}
+                        </tr>`
+                    )}
+                    </table>
+                    ${this.render_legend()}
+                    <div id="tooltip" class="${this.tooltipOpen ? 'active' : 'hidden'}">${parseFloat(this.selected_val).toFixed(2)} ${this.meta.unit_of_measurement}</div>
+                </div>
+            </ha-card>
+        `;
     }
 
     /* Deal with 24h vs 12h time */
@@ -106,22 +139,41 @@ class HeatmapCard extends LitElement {
         }
     }
 
-    update_legend(scale) {
-        var fragment = [];
-        for (const [idx, color] of scale.gradient.colors(21).entries()) {
-            fragment.push(`${color} ${idx * 5}%`);
+    render_legend() {
+        if (this.config.display.legend === false) {
+            return;
         }
-        this.legend_gradient = fragment.join(', ');
+        const ticks = this.legend_scale(this.meta.scale);
+        return html`
+            <div class="legend-container">
+                <div id="legend" style="background: linear-gradient(90deg, ${this.meta.scale.css})"></div>
+                <div class="tick-container">
+                    ${ticks.map((tick) => html`
+                        <div class="legend-tick" style="left: ${tick[0]}%;"">
+                            <div class="caption">${tick[1]} ${this.meta.unit_of_measurement}</div>
+                        </div>
+                        <span class="legend-shadow">${tick[1]} ${this.meta.unit_of_measurement}</span>`
+                    )}
+                </div>
+            </div>
+        `
     }
 
-    legend_ticks(scale) {
+    legend_scale(scale) {
+        /*
+            Figure out how to space the markings in the legend. There's some room for improvement
+            in that we could snap this to more human friendly values such as integers, .5 and
+            similar.
+        */
         var ticks = [];
-        if (scale.scale === 'relative') {
-            var max = this.config.max_value;
+        if (scale.type === 'relative') {
+            // Figure out our own steps, this scale ranges from 0-1.
+            var max = this.meta.data.max;
             for (var i = 0; i <= 5; i++) {
-                ticks.push([i * 20, ((max / 5) * i).toFixed(2)])
+                ticks.push([i * 20, +((max / 5) * i).toFixed(2)])
             }
         } else {
+            // This scale has steps defined in the scale. Use them.
             var min = scale.steps[0].value;
             var max = scale.steps[scale.steps.length - 1].value;
             var span = max - min;
@@ -132,86 +184,11 @@ class HeatmapCard extends LitElement {
                 ])
             }
         }
-        /*
-            We're generating both a visibile version - legend-tick - that'll be
-            absolutely positioned, but lack any height as far as the flow is concerned.
-            We're also generating a non-visible shadow version (legend-shadow) that'll
-            occupy roughly the same height as the visible one and will affect the flow.
-
-            There may be nicer ways to deal with this, but the CSS is meliting my brain
-            a bit as-is, and this workd.
-        */
-        return html`
-            ${ticks.map((tick) => html`
-                <div class="legend-tick" style="left: ${tick[0]}%;"">
-                    <div class="caption">${tick[1]} ${this.meta.unit_of_measurement}</div>
-                </div>
-                <span class="legend-shadow">${tick[1]} ${this.meta.unit_of_measurement}</span>`
-            )}
-        `
-    }
-
-    populate_meta(hass) {
-        const consumerAttributes = hass.states[this.config.entity].attributes;
-        var meta = {
-            'unit_of_measurement': consumerAttributes['unit_of_measurement'],
-            'state_class': consumerAttributes['state_class'],
-            'device_class': consumerAttributes['device_class'],
-            'language': hass.selectedLanguage ?? hass.language ?? 'en',
-            'scale': this.generate_scale(
-                this.config.scale ?? 
-                this.device_class_defaults[consumerAttributes['device_class']] ??
-                'iron red'
-            )
-        };
-        console.log(meta);
-        return meta;
-    }
-
-    render() {
-        if (this.grid === undefined) { this.grid = []; }
-        // Shallow copy so that reverse() won't screw with the data.
-        const grid = Object.assign([], this.grid);
-        this.update_legend(this.meta.scale);
-        return html`
-            <ha-card header="${this.config.title}" id="card">
-                <div class="card-content">
-                    <table>
-                        <tr class="first">
-                            <th class="hm-row-title">${this.localize('ui.dialogs.helper_settings.input_datetime.date', 'Date')}</th>
-                            ${this.date_table_headers()}
-                        </tr>
-                    ${grid.reverse().map((entry) => 
-                        html`<tr>
-                            <td class="hm-row-title">${entry.date}</td>
-                            ${entry.vals.map((util) => {
-                                var css_class="hm-box";
-                                var r = util;
-                                if (r === null) { css_class += " null"; }
-                                if (this.meta.scale.scale === 'relative') {
-                                    r = util / this.config.max_value;
-                                    if (r > 1) { r = 1 };
-                                }
-                                const col = this.meta.scale.gradient(r);
-                                return html`<td @click="${this.toggleTooltip}" class="${css_class}" data-val="${util}" style="color: ${col}"></td>`
-                            })}
-                        </tr>`
-                    )}
-                    </table>
-                    <div class="legend-container">
-                        <div id="legend" style="background: linear-gradient(90deg, ${this.legend_gradient})"></div>
-                        <div class="tick-container">
-                            ${this.legend_ticks(this.meta.scale)}
-                        </div>
-                    </div>
-                    <div id="tooltip" class="${this.tooltipOpen ? 'active' : 'hidden'}">${parseFloat(this.selected_val).toFixed(2)} ${this.meta.unit_of_measurement}</div>
-                </div>
-            </ha-card>
-        `;
+        return ticks;
     }
 
     /* Todo: research precision in data, how to use (abs. temp) */
-    toggleTooltip(e) {
+    toggle_tooltip(e) {
         const oldSelection = this.renderRoot.querySelector("#selected");
         const card = this.renderRoot.querySelector("#card");
         const tooltip = this.renderRoot.querySelector("#tooltip");
@@ -225,28 +202,41 @@ class HeatmapCard extends LitElement {
         }
         this.tooltipOpen = true;
         target.id = 'selected';
+        /*
+            Todo: Improved handling when we're close to the page edges.
+        */
         var rect = target.getBoundingClientRect();
         var cardRect = card.getBoundingClientRect();
         var top = rect.top - cardRect.top;
         var left = rect.left - cardRect.left;
         tooltip.style.top = (top - 30 - rect.height).toString() + "px";
-        tooltip.style.left = (left - (rect.width / 2) - 5) .toString() + "px";
+        tooltip.style.left = (left - (rect.width / 2) - 70) .toString() + "px";
         this.selected_val = target.dataset.val;
     }
 
-    // Whenever the state changes, a new `hass` object is set. Use this to
-    // update your content.
-    set hass(hass) {
-        // Initialize the content if it's not there yet.
-        if (this.#rendered === true) { return }
-        this.myhass = hass;
-        var historyDays = this.config.days ?? 31;
-        var consumers = [this.config.entity];
-        this.meta = this.populate_meta(hass);
-        this.get_recorder(consumers, historyDays);
-        this.#rendered = true;
+    localize(label, fallback = 'Unknown') {
+        const resources = this.myhass.resources[this.meta.language];
+        return resources && resources[label] ? resources[label] : fallback;
     }
 
+    /*
+        Whenever the state changes, a new `hass` object is set. We fetch some metadata
+        the first time over but generally don't want to update frequently.
+    */
+    set hass(hass) {
+        // Initialize the content if it's not there yet.
+        if (this.hass_inited === true) { return }
+        this.myhass = hass;
+        this.meta = this.populate_meta(hass);
+        var consumers = [this.config.entity];
+        this.get_recorder(consumers, this.config.days);
+        this.hass_inited = true;
+    }
+
+    /*
+        Todo: Test this with other units, make sure it works also for imperial, honors
+        user preference.
+    */
     get_recorder(consumers, days) {
         const now = new Date();
         var startTime = new Date(now - (days * 86400000))
@@ -276,7 +266,19 @@ class HeatmapCard extends LitElement {
                         throw new Error(`Unknown state_class defined (${this.meta['state_class']} for ${consumer}.`);
                 }
             }
+            if (this.meta.data.max === undefined) {
+                this.meta.data.max = this.max_from(this.grid)
+                this.meta.inferred_scale = true;
+            }
         });
+    }
+
+    max_from(grid) {
+        var vals = [];
+        for (const entry of grid) {
+            vals = vals.concat(entry.vals);
+        }
+        return Math.max(...vals);
     }
 
     calculate_measurement_values(consumerData) {
@@ -288,13 +290,14 @@ class HeatmapCard extends LitElement {
             if (hour === 0) {
                 const dateRep = start.toLocaleDateString(this.meta.language, {month: 'short', day: '2-digit'});
                 gridTemp = [];
-                grid.push({'date': dateRep, 'vals': gridTemp});
+                grid.push({'date': dateRep, 'nativeDate': start, 'vals': gridTemp});
             }
             gridTemp[hour] = entry.mean;
         }
-        return grid;
+        return grid.reverse();
     }
 
+    // Todo: cleanup and comment.
     calculate_increasing_values(consumerData) {
         var grid = [];
         var prev = null;
@@ -308,7 +311,7 @@ class HeatmapCard extends LitElement {
 
             if (dateRep !== prevDate && prev !== null) {
                 gridTemp = Array(24).fill(0);
-                grid.push({'date': dateRep, 'vals': gridTemp});
+                grid.push({'date': dateRep, 'nativeDate': start, 'vals': gridTemp});
             }
             if (prev !== null) {
                 var util = (entry.sum - prev).toFixed(2);
@@ -322,41 +325,94 @@ class HeatmapCard extends LitElement {
             Home Assistant. This would typically be hours set in the future.
         */
         gridTemp.splice(hour + 1);
-        return grid;
+        return grid.reverse();
     }
 
-    // The user supplied configuration. Throw an exception and Home Assistant
-    // will render an error card.
+    populate_meta(hass) {
+        const consumerAttributes = hass.states[this.config.entity].attributes;
+        var meta = {
+            'unit_of_measurement': consumerAttributes.unit_of_measurement,
+            'state_class': consumerAttributes.state_class,
+            'device_class': consumerAttributes.device_class,
+            'language': hass.selectedLanguage ?? hass.language ?? 'en',
+            'scale': this.generate_scale(
+                this.config.scale ?? 
+                this.device_class_defaults[consumerAttributes.device_class] ??
+                'iron red'
+            ),
+            'title': (this.config.title ?? (this.config.title === null ? undefined : consumerAttributes.friendly_name)),
+            'inferred_scale': false,
+            'data': {
+                'max': this.config.data.max
+            },
+        };
+        return meta;
+    }
+
+    /* Todo: Error checking for if the domain.length != colors.length */
+    /* Todo: possibly also consider supporting other options for chromajs */
+    generate_scale(config) {
+        // Are we refering to one of the builtin types by name? Resolve it.
+        if (typeof(config) === 'string') {
+            if (this.builtin_scales[config] === undefined) {
+                return null
+            } else {
+                config = this.builtin_scales[config];
+            }
+        };
+        var colors = [];
+        var domains = [];
+        for (const step of config.steps) {
+            colors.push(step.color);
+            if ('value' in step) {
+                domains.push(step.value)
+            }
+        }
+        var gradient;
+        if (domains.length > 0 && domains.length == colors.length) {
+            gradient = chroma.scale(colors).domain(domains);
+        } else {
+            gradient = chroma.scale(colors);
+        }
+        return {
+            'gradient': gradient,
+            'type': config.type ?? 'relative',
+            'name': config.name,
+            'steps': config.steps,
+            'css': this.legend_css_by_gradient(gradient)
+        }
+    }
+
+    legend_css_by_gradient(gradient) {
+        var fragment = [];
+        for (const [idx, color] of gradient.colors(21).entries()) {
+            fragment.push(`${color} ${idx * 5}%`);
+        }
+        return fragment.join(', ');
+    }
+
+    /*
+        The user supplied configuration. Throw an exception and Home Assistant
+        will render an error card. No access to the hass object at this point
+        sadly; it'd simplify things a bit. Some of the config error checking
+        code can be found in render() instead.
+    */
     setConfig(config) {
         if (!config.entity) {
             throw new Error("You need to define an entity");
         }
-        if (config.days <= 0) {
+        if (config.days && config.days <= 0) {
             throw new Error("`days` need to be 1 or higher");
         }
-        /*
-        if (!config.scale) {
-            this.color_scale = this.generate_scale('iron red');
-        } else {
-            this.color_scale = this.generate_scale(config.scale)
-            if (this.color_scale === null) {
-                throw new Error("`scale` configuration invalid");
-            }
-        }
-        */
-
-      /* Todo: Deal with this */
-      /*
-      else {
-        if (config.gradient in this.builtin_scales) {
-            this.color_scale = this.builtin_scales[config.gradient];
-        } else {
-            throw new Error(`Unknown \`gradient\`. Pick one of: ${Object.keys(this.builtin_scales)}`);
-        }
-      }
-      */
-      this.config = config;
-      this.#rendered = false;
+        this.config = {
+            'title': config.title,
+            'days': (config.days ?? 21),
+            'entity': config.entity,
+            'scale': config.scale,
+            'data': (config.data ?? {}),
+            'display': (config.display ?? {})
+        };
+        this.hass_inited = false;
     }
   
     // The height of your card. Home Assistant uses this to automatically
@@ -490,16 +546,22 @@ class HeatmapCard extends LitElement {
                 border-color: currentcolor;
                 border-width: 1px;
                 border-style: solid;
+                white-space: nowrap;
             }
             #tooltip.active {
                 display: block;
+            }
+
+            /* Errors - only visible in edit mode */
+            .error {
+                color: red;
             }
         `;
 
     builtin_scales = {
         'iron red': {
             'name': 'Iron red',
-            'scale': 'relative',
+            'type': 'relative',
             'steps': [
                 {
                     'value': 0,
@@ -534,14 +596,10 @@ class HeatmapCard extends LitElement {
         },
         'carbon dioxide': {
             'name': 'CO₂',
-            'scale': 'absolute',
+            'type': 'absolute',
             'steps': [
                 {
-                    'value': 420,
-                    'color': '#6d9b17'
-                },
-                {
-                    'value': 800,
+                    'value': 520,
                     'color': '#6d9b17'
                 },
                 {
@@ -560,7 +618,7 @@ class HeatmapCard extends LitElement {
         },
         'indoor temperature': {
             'name': 'Indoor temperature',
-            'scale': 'absolute',
+            'type': 'absolute',
             'steps': [
                 {
                     'value': 12,
@@ -602,15 +660,7 @@ class HeatmapCard extends LitElement {
         'carbon_dioxide': 'carbon dioxide',
         'energy': 'iron red',
         'temperature': 'indoor temperature'
-    }
-    
-    static getStubConfig() {
-        return {
-            'title': 'Descriptive card title here',
-            'days': 31,
-            'entity': null
-        }
-    }
+    }    
 }
 
 /* Home Assistant custodial stuff:

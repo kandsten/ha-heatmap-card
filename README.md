@@ -15,7 +15,7 @@ There are certainly other ways to visualise the same data, but few that offer qu
 <br clear="both"/>
 
 ## Installation
-This module is not yet available in HACS or widely advertised; if you're reading this, chances are that I told you about it directly.
+This module is not yet available in HACS or widely advertised; if you're reading this, chances are that I told you about it directly in some fashion.
 
 For now, you need to install it manually:
 
@@ -35,11 +35,11 @@ type: custom:heatmap-card
 entity: sensor.aranet_uppe_temperature
 ```
 
-It'll pick a card `title` based on the name of the entity, present 21 days worth of data and pick a color scheme and scale based on the entity [device type](https://www.home-assistant.io/integrations/sensor/).
+It'll pick a card `title` based on the name of the entity, present the default 21 days worth of data and pick a color scheme and scale based on the entity [device type](https://www.home-assistant.io/integrations/sensor/).
 
-It's a bit opinionated in what a "good" scale will be, and _may_ give you something that's not really fit for your usage (for instance by assuming that temperature sensor data refers to _indoor_ temperature).
+It's a bit opinionated in what a "good" scale will be, and _may_ give you something that's not really fit for your usage (for instance by assuming that temperature sensor data refers to _indoor_ temperature). 
 
-That said, for a lot of data types, it should give you something workable out of the box.
+Currently, the number of data types is also rather limited. The intent is that for a lot of data types, it should eventually give you something workable out of the box.
 
 <br clear="both"/>
 
@@ -48,7 +48,7 @@ That said, for a lot of data types, it should give you something workable out of
 
 A slightly more involved example, setting the number of days to present as well as
 defining the `max_value`. Setting a max value is important in order to make the display
-consistent across different time periods; ensuring that the same color shade always means the same consumption.
+consistent across different time periods; ensuring that the same shade of color always means the same consumption.
 
 In the case of energy type entities, setting `max_value` to f.x the total production
 capacity in kW of a PV install or the main fuse capacity of your house would make
@@ -58,7 +58,8 @@ sense.
 title: Grid energy usage
 type: custom:heatmap-card
 entity: sensor.elforbrukning_lb
-max_value: 14
+data:
+  max: 14
 days: 20
 ```
 
@@ -72,3 +73,57 @@ Some common fuse sizes and the corresponding maximum power draw:
 |      35A|             24|
 
 <br clear="both"/>
+
+### Built-in color scales
+FILL ME IN.
+
+### Custom color scales
+Don't fancy the out of the box color scales? Brign your own!
+
+A color scale contains _steps_. Each `step` has a `value` and
+a `color` attached to it; these are used to create a gradient.
+
+A scale also has a `type`, which is either `relative` or `absolute`.
+
+_Relative_ scales stretch from 0 to 1 and will scale automatically from 0 to your max value; you bring the colors, the code will figure out the range. This is useful for any scale where the numbers aren't known in advance.
+
+_Absolute_ scales map to the values defined in the scale itself. These are good for when you need to map a color to a specific value; for instance, 420 ppm worth of co₂ is good ([by some measure of good](https://www.ipcc.ch/)), 1000 ppm is getting hairy. This isn't going to be relative to your data; thus, absolute.
+
+A _relative_ scale example:
+```
+# This is an energy sensor
+type: custom:heatmap-card
+entity: sensor.total_pv_generation
+data:
+  max: 4.8
+scale:
+  type: relative
+  steps:
+    - value: 0
+      color: '#000000'
+    - value: 0.5
+      color: '#FFFF00'
+    - value: 1
+      color: '#FF00FF'
+```
+
+An _absolute_ scale example:
+```
+# This is a temperature sensor
+type: custom:heatmap-card
+entity: sensor.aranet_uppe_temperature
+scale:
+  type: absolute
+  steps:
+    - value: 10
+      color: '#000000'
+    - value: 20
+      color: '#FFFF00'
+    - value: 30
+      color: '#FF00FF'
+```
+
+
+## General thanks
+* [Home Assistant](https://www.home-assistant.io/) is nifty and I very much appreciate the work that has gone into making sure that data is standardized and decorated in a sane way. Doing something like this card would be much harder without that effort.
+* [chroma-js](https://gka.github.io/chroma.js/) for the heavy lifting of color related operations.

@@ -74,7 +74,7 @@ days: 20
 
 Some common fuse sizes and the corresponding maximum power draw:
 
-|Fuse size| kW / max_value|
+|Fuse size| kW / data.max |
 |     ---:|          ---: |
 |      16A|             11|
 |      20A|             14|
@@ -105,7 +105,7 @@ configuration specifies another scale
   automatically for `temperature` sensors unless overridden.
 
 ### Custom color scales
-Don't fancy the out of the box color scales? Brign your own!
+Don't fancy the out of the box color scales? Bring your own!
 
 A color scale contains _steps_. Each `step` has a `value` and
 a `color` attached to it; these are used to create a gradient.

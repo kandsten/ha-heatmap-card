@@ -78,11 +78,11 @@ class HeatmapCard extends LitElement {
         // We're in the editor interface. Check for config errors that we can't check for in setConfig since
         // don't have the hass object reliably available in that function.
         if (this.parentNode.nodeName === 'HUI-CARD-PREVIEW') {
-            if (this.meta.state_class === 'total_increasing' && this.meta.inferred_scale === true && this.config.data.infer !== true) {
+            if (this.meta.state_class === 'total_increasing' && this.config.data.max === undefined) {
                 return html`<span class="error"><p>Error: Your entity is displaying consumption data (kWh of energy, m³ of gas, similar)
                 but your card configuration is lacking a value for <code>data.max</code>. This will cause the heatmap colors to re-scale
                 based on the currently shown values in the table rather than maintain consistency over time.</p>
-                <p>Either set <code>data.max</code> to the expected maximum value or set <code>data.infer</code> to <code>true</code>
+                <p>Either set <code>data.max</code> to the expected maximum value or to <code>auto</code>
                 to accept this re-scaling.</p>
                 </span>`
             }
@@ -106,7 +106,9 @@ class HeatmapCard extends LitElement {
                                 var r = util;
                                 if (r === null) { css_class += " null"; }
                                 if (this.meta.scale.type === 'relative') {
-                                    r = util / this.meta.data.max;
+                                    const diff = this.meta.data.max - this.meta.data.min
+                                    r = (util - this.meta.data.min) / diff;
+                                    if (r < 0) { r = 0 };
                                     if (r > 1) { r = 1 };
                                 }
                                 const col = this.meta.scale.gradient(r);
@@ -168,10 +170,14 @@ class HeatmapCard extends LitElement {
         var ticks = [];
         if (scale.type === 'relative') {
             // Figure out our own steps, this scale ranges from 0-1.
-            var max = this.meta.data.max;
+            var diff = this.meta.data.max - this.meta.data.min;
             for (var i = 0; i <= 5; i++) {
-                ticks.push([i * 20, +((max / 5) * i).toFixed(2)])
-            }
+                ticks.push(
+                    [
+                        i * 20,
+                        +(Number(this.meta.data.min + (diff / 5) * i).toFixed(2))
+                    ]
+                )}
         } else {
             // This scale has steps defined in the scale. Use them.
             var min = scale.steps[0].value;
@@ -266,19 +272,31 @@ class HeatmapCard extends LitElement {
                         throw new Error(`Unknown state_class defined (${this.meta['state_class']} for ${consumer}.`);
                 }
             }
-            if (this.meta.data.max === undefined) {
+            if (this.config.data.max === 'auto') {
                 this.meta.data.max = this.max_from(this.grid)
-                this.meta.inferred_scale = true;
+            }
+            if (this.config.data.min === 'auto') {
+                this.meta.data.min = this.min_from(this.grid)
             }
         });
     }
 
+    // Todo: Refactor at some point, lots of copying for no good reason
     max_from(grid) {
         var vals = [];
         for (const entry of grid) {
             vals = vals.concat(entry.vals);
         }
         return Math.max(...vals);
+    }
+
+    // Todo: Refactor at some point, lots of copying for no good reason
+    min_from(grid) {
+        var vals = [];
+        for (const entry of grid) {
+            vals = vals.concat(entry.vals);
+        }
+        return Math.min(...vals);
     }
 
     calculate_measurement_values(consumerData) {
@@ -341,9 +359,9 @@ class HeatmapCard extends LitElement {
                 'iron red'
             ),
             'title': (this.config.title ?? (this.config.title === null ? undefined : consumerAttributes.friendly_name)),
-            'inferred_scale': false,
             'data': {
-                'max': this.config.data.max
+                'max': this.config.data.max,
+                'min': (this.config.data.min ?? 0)
             },
         };
         return meta;
@@ -412,6 +430,18 @@ class HeatmapCard extends LitElement {
             'data': (config.data ?? {}),
             'display': (config.display ?? {})
         };
+        if (this.config.data.max !== undefined && 
+            (this.config.data.max !== 'auto' && 
+            typeof(this.config.data.max) !== 'number')
+        ) {
+            throw new Error("`data.max` need to be either `auto` or a number");
+        }
+        if (this.config.data.min !== undefined && 
+            (this.config.data.min !== 'auto' && 
+            typeof(this.config.data.min) !== 'number')
+        ) {
+            throw new Error("`data.min` need to be either `auto` or a number");
+        }
         this.hass_inited = false;
     }
   
@@ -559,6 +589,80 @@ class HeatmapCard extends LitElement {
         `;
 
     builtin_scales = {
+        'black hot': {
+            'name': 'Black hot',
+            'type': 'relative',
+            'steps': [
+                {
+                    'value': 0,
+                    'color': '#F5F5F5'
+                },
+                {
+                    'value': 1,
+                    'color': '#242124'
+                }
+            ]
+        },
+        'carbon dioxide': {
+            'name': 'CO₂',
+            'type': 'absolute',
+            'steps': [
+                {
+                    'value': 520,
+                    'color': '#6d9b17'
+                },
+                {
+                    'value': 1000,
+                    'color': '#FFBF00'
+                },
+                {
+                    'value': 1400,
+                    'color': '#cf0000'
+                },
+                {
+                    'value': 3000,
+                    'color': '#5b0f8c'
+                }
+            ]
+        },
+        'indoor temperature': {
+            'name': 'Indoor temperature',
+            'type': 'absolute',
+            'steps': [
+                {
+                    'value': 12,
+                    'legend': 'Freezing',
+                    'color': '#0f3489'
+                },
+                {
+                    'value': 16,
+                    'legend': 'Very low',
+                    'color': '#595ea3'
+                },
+                {
+                    'value': 18,
+                    'color': '#7374b0'
+                },
+                {
+                    'value': 20,
+                    'color': '#F5F5F5'
+                },
+                {
+                    'value': 22,
+                    'color': '#F5F5F5'
+                },
+                {
+                    'value': 24,
+                    'color': '#ea755a',
+                    'legend': 'High'
+                },
+                {
+                    'value': 28,
+                    'color': '#cf0000',
+                    'legend': 'Very high'
+                }
+            ]
+        },
         'iron red': {
             'name': 'Iron red',
             'type': 'relative',
@@ -594,66 +698,38 @@ class HeatmapCard extends LitElement {
 
             ]
         },
-        'carbon dioxide': {
-            'name': 'CO₂',
-            'type': 'absolute',
+        'stoplight': {
+            'name': 'Stoplight',
+            'type': 'relative',
             'steps': [
                 {
-                    'value': 520,
+                    'value': 0,
                     'color': '#6d9b17'
                 },
                 {
-                    'value': 1000,
-                    'color': '#FFBF00'
+                    'value': 0.5,
+                    'color': '#fde74c'
                 },
                 {
-                    'value': 1400,
-                    'color': '#D2222D'
+                    'value': 1,
+                    'color': '#cf0000'
+                },
+            ]
+        },
+        'white hot': {
+            'name': 'White hot',
+            'type': 'relative',
+            'steps': [
+                {
+                    'value': 0,
+                    'color': '#242124'
                 },
                 {
-                    'value': 3000,
-                    'color': '#5b0f8c'
+                    'value': 1,
+                    'color': '#F5F5F5'
                 }
             ]
         },
-        'indoor temperature': {
-            'name': 'Indoor temperature',
-            'type': 'absolute',
-            'steps': [
-                {
-                    'value': 12,
-                    'legend': 'Freezing',
-                    'color': '#0004fc'
-                },
-                {
-                    'value': 16,
-                    'legend': 'Very low',
-                    'color': '#4e50bf'
-                },
-                {
-                    'value': 18,
-                    'color': '#b5b6ff'
-                },
-                {
-                    'value': 20,
-                    'color': '#FFFFFF'
-                },
-                {
-                    'value': 22,
-                    'color': '#FFFFFF'
-                },
-                {
-                    'value': 24,
-                    'color': '#ffb5bb',
-                    'legend': 'High'
-                },
-                {
-                    'value': 27,
-                    'color': '#de211b',
-                    'legend': 'Very high'
-                }
-            ]
-        }
     }
 
     device_class_defaults = {

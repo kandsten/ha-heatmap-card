@@ -93,58 +93,28 @@ Some common fuse sizes and the corresponding maximum power draw:
 * `iron red` (default) - Blue-purple-red-yellow-white'ish scale, often used in thermal imaging. This is the default unless the configuration specifies another scale.<br/>
 ![Iron red](./images/scale/iron_red.svg)
 
-  <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-    <foreignObject width="200" height="12">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #230382 0%, #5b108c 5%, #921c96 10%, #a42880 15%, #b7336b 20%, #c93f55 25%, #d04e48 30%, #d85e3a 35%, #df6d2d 40%, #e37e31 45%, #e78f35 50%, #eb9f39 55%, #efb03d 60%, #f2bf44 65%, #f6cf4b 70%, #f9de52 75%, #f8e36c 80%, #f7e786 85%, #f7eca0 90%, #f6f0ba 95%, #f5f5d4 100%); height: 12px; width: 200px;">
-        </div>
-    </foreignObject>
-  </svg>
-
 * `black hot` - white-to-black<br/>
-    <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-      <foreignObject width="200" height="12">
-          <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #F5F5F5 0%, #242124 100%); height: 12px; width: 200px;">&nbsp;
-          </div>
-      </foreignObject>
-    </svg>
+![Black hot](./images/scale/black_hot.svg)
+
 * `stoplight` - green-yellow-red<br/>
-      <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-        <foreignObject width="200" height="12">
-            <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #6d9b17 0%, #7ba31c 5%, #8aaa22 10%, #98b227 15%, #a7b92c 20%, #b5c132 25%, #c3c937 30%, #d2d03c 35%, #e0d841 40%, #efdf47 45%, #fde74c 50%, #f8d044 55%, #f4b93d 60%, #efa235 65%, #eb8b2e 70%, #e67426 75%, #e15c1e 80%, #dd4517 85%, #d82e0f 90%, #d41708 95%, #cf0000 100%); height: 12px; width: 200px;">&nbsp;
-            </div>
-        </foreignObject>
-      </svg>
+![Stoplight](./images/scale/stoplight.svg)
+
 * `white hot` - black-to-white<br/>
-    <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-      <foreignObject width="200" height="12">
-          <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg,  #242124 0%, #F5F5F5 100%); height: 12px; width: 200px;">&nbsp;
-          </div>
-      </foreignObject>
-    </svg>
+![White hot](./images/scale/white_hot.svg)
 
 **Absolute scales, generally usable for specific sensor types:**
 * `carbon dioxide` - green-yellow-red-purple, with yellow, red and
   purple representing the general badness of co₂ concentration on
   human cognition and health. Picked automatically for `carbon_dioxide`
   sensors unless overridden.<br/>
-    <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-      <foreignObject width="200" height="12">
-          <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #6d9b17 0%, #93a411 5%, #b8ae0b 10%, #deb705 15%, #fdb700 20%, #ee7c00 25%, #df4100 30%, #d00600 35%, #c7010a 40%, #be0215 45%, #b5031f 50%, #ac052a 55%, #a30635 60%, #9a0740 65%, #91084b 70%, #880956 75%, #7f0a61 80%, #760c6b 85%, #6d0d76 90%, #640e81 95%, #5b0f8c 100%); width: 200px;">&nbsp;
-          </div>
-      </foreignObject>
-    </svg>
+![Carbon dioxide](./images/scale/carbon_dioxide.svg)
 
 * `indoor temperature` - blue-white-red, where white and near white
   translates to what's generally considered to be comfortable indoor
   temperatures. Rather northern hemisphere centric, may not map well
   to your local preference (see _Custom color scales_ below). Picked
   automatically for `temperature` sensors unless overridden.<br/>
-    <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
-      <foreignObject width="200" height="12">
-          <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #0f3489 0%, #1e3c8e 5%, #2d4593 10%, #3b4d99 15%, #4a569e 20%, #595ea3 25%, #6367a8 30%, #6e70ad 35%, #8d8ebe 40%, #c1c1d9 45%, #f5f5f5 50%, #f5f5f5 55%, #f5f5f5 60%, #f3dbd6 65%, #eea898 70%, #ea755a 75%, #e55e48 80%, #df4636 85%, #da2f24 90%, #d41712 95%, #cf0000 100%); width: 200px;">&nbsp;
-          </div>
-      </foreignObject>
-    </svg>
+![Indoor temperature](./images/scale/indoor_temperature.svg)
 
 
 ### Custom color scales

@@ -31,8 +31,6 @@ If you use [HACS](https://hacs.xyz) as-is, this card can be added as a custom re
   * Download `heatmap-card.js`, place it in your `config/www` directory.
   * Add `/local/heatmap-card.js` in your Resource config, type of `JavaScript Module`.
 
-<br clear="both"/>
-
 ## Configuration
 ### Minimal example
 <img align="right" width="300" alt="A temperature display heat map" src="images/temperature.png">

@@ -1,0 +1,6 @@
+  <svg width="200" height="12" xmlns="http://www.w3.org/2000/svg">
+    <foreignObject width="200" height="12">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="background: linear-gradient(90deg, #230382 0%, #5b108c 5%, #921c96 10%, #a42880 15%, #b7336b 20%, #c93f55 25%, #d04e48 30%, #d85e3a 35%, #df6d2d 40%, #e37e31 45%, #e78f35 50%, #eb9f39 55%, #efb03d 60%, #f2bf44 65%, #f6cf4b 70%, #f9de52 75%, #f8e36c 80%, #f7e786 85%, #f7eca0 90%, #f6f0ba 95%, #f5f5d4 100%); height: 12px; width: 200px;">
+        </div>
+    </foreignObject>
+  </svg>

@@ -20,14 +20,16 @@ There are certainly other ways to visualise the same data, but few that offer qu
 <br clear="both"/>
 
 ## Installation
-This module is not yet available in HACS or widely advertised; if you're reading this, chances are that I told you about it directly in some fashion.
+### HACS
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=kandsten&repository=ha-heatmap-card&category=Lovelace)
 
-For now, you need to install it manually:
+If you use [HACS](https://hacs.xyz) as-is, this card can be added as a custom repository. 
 
+(As always, you should be careful with software which lets you pull random code from the Internet and run it)
+
+### Manual install
   * Download `heatmap-card.js`, place it in your `config/www` directory.
   * Add `/local/heatmap-card.js` in your Resource config, type of `JavaScript Module`.
-
-<br clear="both"/>
 
 ## Configuration
 ### Minimal example
@@ -84,25 +86,34 @@ Some common fuse sizes and the corresponding maximum power draw:
 <br clear="both"/>
 
 ### Built-in color scales
-(Yes, this section could really do with some graphics)
 
 **Relative scales, generally usable for most sensors:**
-* `iron red` (default) - Blue-purple-red-yellow-white'ish scale, often used in thermal imaging. This is the default unless the
-configuration specifies another scale
-* `black hot` - white-to-black
-* `stoplight` - green-yellow-red
-* `white hot` - black-to-white
+* `iron red` (default) - Blue-purple-red-yellow-white'ish scale, often used in thermal imaging. This is the default unless the configuration specifies another scale.<br/>
+![Iron red](./images/scale/iron_red.svg)
+
+* `black hot` - white-to-black<br/>
+![Black hot](./images/scale/black_hot.svg)
+
+* `stoplight` - green-yellow-red<br/>
+![Stoplight](./images/scale/stoplight.svg)
+
+* `white hot` - black-to-white<br/>
+![White hot](./images/scale/white_hot.svg)
 
 **Absolute scales, generally usable for specific sensor types:**
 * `carbon dioxide` - green-yellow-red-purple, with yellow, red and
   purple representing the general badness of co₂ concentration on
   human cognition and health. Picked automatically for `carbon_dioxide`
-  sensors unless overridden.
+  sensors unless overridden.<br/>
+![Carbon dioxide](./images/scale/carbon_dioxide.svg)
+
 * `indoor temperature` - blue-white-red, where white and near white
   translates to what's generally considered to be comfortable indoor
   temperatures. Rather northern hemisphere centric, may not map well
   to your local preference (see _Custom color scales_ below). Picked
-  automatically for `temperature` sensors unless overridden.
+  automatically for `temperature` sensors unless overridden.<br/>
+![Indoor temperature](./images/scale/indoor_temperature.svg)
+
 
 ### Custom color scales
 Don't fancy the out of the box color scales? Bring your own!

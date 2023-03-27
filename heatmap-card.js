@@ -95,7 +95,7 @@ class HeatmapCard extends LitElement {
                 <div class="card-content">
                     <table>
                         <tr class="first">
-                            <th class="hm-row-title">${this.localize('ui.dialogs.helper_settings.input_datetime.date', 'Date')}</th>
+                            <th class="hm-row-title">${this.myhass.localize('ui.dialogs.helper_settings.input_datetime.date')}</th>
                             ${this.date_table_headers()}
                         </tr>
                     ${this.grid.map((entry) => 
@@ -220,11 +220,6 @@ class HeatmapCard extends LitElement {
         this.selected_val = target.dataset.val;
     }
 
-    localize(label, fallback = 'Unknown') {
-        const resources = this.myhass.resources[this.meta.language];
-        return resources && resources[label] ? resources[label] : fallback;
-    }
-
     /*
         Whenever the state changes, a new `hass` object is set. We fetch some metadata
         the first time over but generally don't want to update frequently.
@@ -253,7 +248,7 @@ class HeatmapCard extends LitElement {
             "period":"hour",
             "units": {
                 "energy":"kWh",
-                "volume":"m³"
+                "temperature": this.myhass.config.unit_system.temperature
             },
             "start_time": startTime.toISOString(),
             "types":["sum", "mean"]
@@ -380,7 +375,18 @@ class HeatmapCard extends LitElement {
         };
         var colors = [];
         var domains = [];
+
         for (const step of config.steps) {
+            /*
+                This is a bit fugly in that we're just converting the units rather than using
+                a whole separate scale for Fahrenheit. However, it seems that the conversion is
+                Close Enough for all practical purposes; US standards still adhere to the same
+                physical properties as the rest of the world re comfort temperatures, etc. Will
+                revisit this if need be, but keeping it simple for now.
+            */
+            if (this.myhass.config.unit_system.temperature === '°F' && config.unit === '°C') {
+                step.value = Math.round((step.value * 1.8) + 32);
+            }
             colors.push(step.color);
             if ('value' in step) {
                 domains.push(step.value)
@@ -628,6 +634,7 @@ class HeatmapCard extends LitElement {
         'indoor temperature': {
             'name': 'Indoor temperature',
             'type': 'absolute',
+            'unit': '°C',
             'steps': [
                 {
                     'value': 12,

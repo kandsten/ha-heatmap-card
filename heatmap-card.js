@@ -248,7 +248,8 @@ class HeatmapCard extends LitElement {
             "period":"hour",
             "units": {
                 "energy":"kWh",
-                "volume":"m³"
+                "volume":"m³",
+                "temperature": this.myhass.config.unit_system.temperature
             },
             "start_time": startTime.toISOString(),
             "types":["sum", "mean"]
@@ -375,7 +376,18 @@ class HeatmapCard extends LitElement {
         };
         var colors = [];
         var domains = [];
+
         for (const step of config.steps) {
+            /*
+                This is a bit fugly in that we're just converting the units rather than using
+                a whole separate scale for Fahrenheit. However, it seems that the conversion is
+                Close Enough for all practical purposes; US standards still adhere to the same
+                physical properties as the rest of the world re comfort temperatures, etc. Will
+                revisit this if need be, but keeping it simple for now.
+            */
+            if (this.myhass.config.unit_system.temperature === '°F' && config.unit === '°C') {
+                step.value = Math.round((step.value * 1.8) + 32);
+            }
             colors.push(step.color);
             if ('value' in step) {
                 domains.push(step.value)
@@ -623,6 +635,7 @@ class HeatmapCard extends LitElement {
         'indoor temperature': {
             'name': 'Indoor temperature',
             'type': 'absolute',
+            'unit': '°C',
             'steps': [
                 {
                     'value': 12,

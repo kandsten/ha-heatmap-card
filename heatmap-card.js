@@ -248,7 +248,6 @@ class HeatmapCard extends LitElement {
             "period":"hour",
             "units": {
                 "energy":"kWh",
-                "volume":"m³",
                 "temperature": this.myhass.config.unit_system.temperature
             },
             "start_time": startTime.toISOString(),

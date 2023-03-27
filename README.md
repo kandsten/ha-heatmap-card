@@ -15,7 +15,6 @@ There are certainly other ways to visualise the same data, but few that offer qu
 ## Current state?
 * Working but not really extensively tested in the real world.
 * Still need a decent chunk of work in terms of built-in color scales for various sensor types. Expect the scales to change
-* Does not yet support Fahrenheit or other imperial units in a sane manner, somewhat metric centric.
 
 <br clear="both"/>
 

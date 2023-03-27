@@ -95,7 +95,7 @@ class HeatmapCard extends LitElement {
                 <div class="card-content">
                     <table>
                         <tr class="first">
-                            <th class="hm-row-title">${this.localize('ui.dialogs.helper_settings.input_datetime.date', 'Date')}</th>
+                            <th class="hm-row-title">${this.myhass.localize('ui.dialogs.helper_settings.input_datetime.date')}</th>
                             ${this.date_table_headers()}
                         </tr>
                     ${this.grid.map((entry) => 
@@ -218,11 +218,6 @@ class HeatmapCard extends LitElement {
         tooltip.style.top = (top - 30 - rect.height).toString() + "px";
         tooltip.style.left = (left - (rect.width / 2) - 70) .toString() + "px";
         this.selected_val = target.dataset.val;
-    }
-
-    localize(label, fallback = 'Unknown') {
-        const resources = this.myhass.resources[this.meta.language];
-        return resources && resources[label] ? resources[label] : fallback;
     }
 
     /*

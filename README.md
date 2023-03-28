@@ -86,6 +86,12 @@ Some common fuse sizes and the corresponding maximum power draw:
 
 ### Built-in color scales
 
+```
+type: custom:heatmap-card
+entity: sensor.aranet_uppe_temperature
+scale: black hot
+```
+
 **Relative scales, generally usable for most sensors:**
 * `iron red` (default) - Blue-purple-red-yellow-white'ish scale, often used in thermal imaging. This is the default unless the configuration specifies another scale.<br/>
 ![Iron red](./images/scale/iron_red.svg)

@@ -1,0 +1,41 @@
+name: Outdoor temperature
+type: absolute
+device_class: temperature
+unit: °C
+steps:
+  - value: -30
+    legend: Severe risk of frostbite
+    color: "#0f3489"
+  - value: 0
+    legend: Risk of frostbite
+    color: "#595ea3"
+  - value: 10
+    legend: Risk of hypothermia
+    color: "#7374b0"
+  - value: 15
+    legend: Chilling temperatures
+    color: "#7374b0"
+  - value: 22
+    color: "#F5F5F5"
+  - value: 27
+    color: "#F5F5F5"
+  - value: 32
+    legend: Risk of heat cramps or exhaustion 
+    color: "#ea755a"
+  - value: 40
+    legend: Heat exhaustion more likely
+    color: "#cf0000"
+  - value: 54
+    legend: Heat stroke risk
+    color: "#5b0f8c"
+documentation:
+  text: |
+    Outdoor temperatures related to human comfort and risk levels.
+    
+    Note that this works best when using apparent (or [wet bulb](https://en.wikipedia.org/wiki/Wet-bulb_temperature))
+    temperature and taking wind chill into account, not just [dry bulb](https://en.wikipedia.org/wiki/Dry-bulb_temperature)
+    temperature, such as a like a thermometer reading.
+
+    Individual factors such as clothing, activity level, wind speed and
+    exposure to sun all play a part in how we perceive temperature.
+    See this is a rough guideline.

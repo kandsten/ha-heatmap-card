@@ -1,0 +1,24 @@
+name: ColorBrewer 5-class BuPu
+type: relative
+steps:
+  - value: 0
+    color: "#edf8fb"
+  - value: 0.25
+    color: "#b3cde3"
+  - value: 0.5
+    color: "#8c96c6"
+  - value: 0.75
+    color: "#8856a7"
+  - value: 1
+    color: "#810f7c"
+documentation:
+  text:
+    Colors by Cynthia Brewer, [colorbrewer2.org](https://colorbrewer2.org).
+
+    ColorBrewer provides guidance when selecting colors for map visualisations,
+    making them distinct. While it's not a _perfect_ fit for a gradient scale,
+    such as this one, the colors are picked out to be safe for color blindness
+    and offer improved distinction between the various parts of the band.
+  license:
+    name: Apache License 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0

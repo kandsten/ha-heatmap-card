@@ -1,0 +1,34 @@
+name: PM2.5 (WHO aggregate)
+type: absolute
+device_class: pm25
+unit: µg/m³
+steps:
+  - value: 5
+    legend: AQG level
+    color: "#6d9b17"
+  - value: 25
+    legend: Interim target 2
+    color: "#FFBF00"
+  - value: 50
+    color: "#cf0000"
+  - value: 100
+    legends: Risk level
+    color: "#5b0f8c"
+documentation:
+  text: |
+    This scale is based on an aggregate of the World Health Organization
+    [global air quality guidelines](https://www.who.int/publications/i/item/9789240034228) 
+    and [Personal interventions and risk communication on Air Pollution](https://www.who.int/publications/i/item/9789240000278)
+    reports.
+
+    The lowest part of the range map to the AQG (Air Quality Goal)
+    target, a PM<sub>2.5</sub> level of <5 μg/m<sup>3</sup> which is considered relatively safe.
+    The upper part, >100 μg/m<sup>3</sup>, is considered the level where the 
+    health benefits of regular physical activity is greatly offset by the
+    PM<sub>2.5</sub> exposure.
+
+    Note that the level of <5 μg/m<sup>3</sup> is the AQG exposure
+    level on an annaul basis. The WHO also has a 24-hour AQG level of
+    <15 μg/m<sup>3</sup> which is not included in this scale. As we're
+    trending patterns over time, the annual target made more sense for
+    the heatmap.

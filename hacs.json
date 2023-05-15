@@ -1,5 +1,5 @@
 {
     "name": "Heatmap card",
     "content_in_root": true,
-    "filename": "heatmap-card.js"
+    "filename": "dist/heatmap-card.js"
 }

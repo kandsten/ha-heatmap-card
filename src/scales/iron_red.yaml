@@ -1,0 +1,17 @@
+name: Iron red
+type: relative
+steps:
+  - value: 0
+    color: "#230382"
+  - value: 0.1
+    color: "#921C96"
+  - value: 0.25
+    color: "#C93F55"
+  - value: 0.4
+    color: "#DF6D2D"
+  - value: 0.6
+    color: "#EFB03D"
+  - value: 0.75
+    color: "#F9DE52"
+  - value: 1
+    color: "#F5F5D4"

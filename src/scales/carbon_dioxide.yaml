@@ -1,0 +1,27 @@
+name: CO₂, indoor exposure
+type: absolute
+device_class: carbon_dioxide
+steps:
+  - value: 520
+    color: "#6d9b17"
+  - value: 1000
+    color: "#FFBF00"
+  - value: 1400
+    color: "#cf0000"
+  - value: 3000
+    color: "#5b0f8c"
+documentation:
+  text: |
+    CO₂ levels reflect the amount of fresh air in a space. High levels
+    indicate insufficient ventilation. The specific effects of higher
+    concentrations of CO₂ are highly individual, but studies have shown
+    that levels over 1000 ppm cause cognitive impairment in many
+    individuals.
+
+    Levels over 2000 ppm have been linked to health effects in some
+    studies. There is no conclusive sum of evidence.
+
+    This scale caps at 3000 ppm, as a maximum level that'd signify
+    fairly bad air. Levels above 5000 ppm are considered dangerous
+    in workplace standards (f.x OSHA in the US) and are indicative
+    of greatly insufficient ventilation overall.

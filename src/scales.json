@@ -1,0 +1,423 @@
+[
+  {
+    "key": "black hot",
+    "name": "Black hot",
+    "steps": [
+      {
+        "color": "#F5F5F5",
+        "value": 0
+      },
+      {
+        "color": "#242124",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "device_class": "carbon_dioxide",
+    "documentation": {
+      "text": "<p>CO\u2082 levels reflect the amount of fresh air in a space. High levels\nindicate insufficient ventilation. The specific effects of higher\nconcentrations of CO\u2082 are highly individual, but studies have shown\nthat levels over 1000 ppm cause cognitive impairment in many\nindividuals.</p>\n<p>Levels over 2000 ppm have been linked to health effects in some\nstudies. There is no conclusive sum of evidence.</p>\n<p>This scale caps at 3000 ppm, as a maximum level that'd signify\nfairly bad air. Levels above 5000 ppm are considered dangerous\nin workplace standards (f.x OSHA in the US) and are indicative\nof greatly insufficient ventilation overall.</p>"
+    },
+    "key": "carbon dioxide",
+    "name": "CO\u2082, indoor exposure",
+    "steps": [
+      {
+        "color": "#6d9b17",
+        "value": 520
+      },
+      {
+        "color": "#FFBF00",
+        "value": 1000
+      },
+      {
+        "color": "#cf0000",
+        "value": 1400
+      },
+      {
+        "color": "#5b0f8c",
+        "value": 3000
+      }
+    ],
+    "type": "absolute"
+  },
+  {
+    "documentation": {
+      "license": {
+        "name": "Apache License 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      },
+      "text": "<p>Colors by Cynthia Brewer, <a href=\"https://colorbrewer2.org\" rel=\"noopener\" target=\"_blank\">colorbrewer2.org</a>.\nColorBrewer provides guidance when selecting colors for map visualisations, making them distinct. While it's not a <em>perfect</em> fit for a gradient scale, such as this one, the colors are picked out to be safe for color blindness and offer improved distinction between the various parts of the band.</p>"
+    },
+    "key": "colorbrewer 5cl bugn",
+    "name": "ColorBrewer 5-class BuGn",
+    "steps": [
+      {
+        "color": "#edf8fb",
+        "value": 0
+      },
+      {
+        "color": "#b2e2e2",
+        "value": 0.25
+      },
+      {
+        "color": "#66c2a4",
+        "value": 0.5
+      },
+      {
+        "color": "#2ca25f",
+        "value": 0.75
+      },
+      {
+        "color": "#006d2c",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "documentation": {
+      "license": {
+        "name": "Apache License 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      },
+      "text": "<p>Colors by Cynthia Brewer, <a href=\"https://colorbrewer2.org\" rel=\"noopener\" target=\"_blank\">colorbrewer2.org</a>.\nColorBrewer provides guidance when selecting colors for map visualisations, making them distinct. While it's not a <em>perfect</em> fit for a gradient scale, such as this one, the colors are picked out to be safe for color blindness and offer improved distinction between the various parts of the band.</p>"
+    },
+    "key": "colorbrewer 5cl bupu",
+    "name": "ColorBrewer 5-class BuPu",
+    "steps": [
+      {
+        "color": "#edf8fb",
+        "value": 0
+      },
+      {
+        "color": "#b3cde3",
+        "value": 0.25
+      },
+      {
+        "color": "#8c96c6",
+        "value": 0.5
+      },
+      {
+        "color": "#8856a7",
+        "value": 0.75
+      },
+      {
+        "color": "#810f7c",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "documentation": {
+      "license": {
+        "name": "Apache License 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      },
+      "text": "<p>Colors by Cynthia Brewer, <a href=\"https://colorbrewer2.org\" rel=\"noopener\" target=\"_blank\">colorbrewer2.org</a>.\nColorBrewer provides guidance when selecting colors for map visualisations, making them distinct. While it's not a <em>perfect</em> fit for a gradient scale, such as this one, the colors are picked out to be safe for color blindness and offer improved distinction between the various parts of the band.</p>"
+    },
+    "key": "colorbrewer 5cl rdpu",
+    "name": "ColorBrewer 5-class BuPu",
+    "steps": [
+      {
+        "color": "#feebe2",
+        "value": 0
+      },
+      {
+        "color": "#fbb4b9",
+        "value": 0.25
+      },
+      {
+        "color": "#f768a1",
+        "value": 0.5
+      },
+      {
+        "color": "#c51b8a",
+        "value": 0.75
+      },
+      {
+        "color": "#7a0177",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "documentation": {
+      "license": {
+        "name": "Apache License 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      },
+      "text": "<p>Colors by Cynthia Brewer, <a href=\"https://colorbrewer2.org\" rel=\"noopener\" target=\"_blank\">colorbrewer2.org</a>.\nColorBrewer provides guidance when selecting colors for map visualisations, making them distinct. While it's not a <em>perfect</em> fit for a gradient scale, such as this one, the colors are picked out to be safe for color blindness and offer improved distinction between the various parts of the band.</p>"
+    },
+    "key": "colorbrewer 5cl ylorbr",
+    "name": "ColorBrewer 5-class YlOrBr",
+    "steps": [
+      {
+        "color": "#ffffd4",
+        "value": 0
+      },
+      {
+        "color": "#fed98e",
+        "value": 0.25
+      },
+      {
+        "color": "#fe9929",
+        "value": 0.5
+      },
+      {
+        "color": "#d95f0e",
+        "value": 0.75
+      },
+      {
+        "color": "#993404",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "device_class": "temperature",
+    "documentation": {
+      "text": "<p>Indoor temperatures related to human comfort levels. Amalgation\nof multiple sources. As always with temperature, individual\nfactors such as generics, clothing and activity level have a big\nimpact.</p>"
+    },
+    "key": "indoor temperature",
+    "name": "Indoor temperature",
+    "steps": [
+      {
+        "color": "#0f3489",
+        "value": 12
+      },
+      {
+        "color": "#595ea3",
+        "value": 16
+      },
+      {
+        "color": "#7374b0",
+        "value": 18
+      },
+      {
+        "color": "#F5F5F5",
+        "value": 20
+      },
+      {
+        "color": "#F5F5F5",
+        "value": 22
+      },
+      {
+        "color": "#ea755a",
+        "value": 24
+      },
+      {
+        "color": "#cf0000",
+        "value": 28
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b0C"
+  },
+  {
+    "key": "iron red",
+    "name": "Iron red",
+    "steps": [
+      {
+        "color": "#230382",
+        "value": 0
+      },
+      {
+        "color": "#921C96",
+        "value": 0.1
+      },
+      {
+        "color": "#C93F55",
+        "value": 0.25
+      },
+      {
+        "color": "#DF6D2D",
+        "value": 0.4
+      },
+      {
+        "color": "#EFB03D",
+        "value": 0.6
+      },
+      {
+        "color": "#F9DE52",
+        "value": 0.75
+      },
+      {
+        "color": "#F5F5D4",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "device_class": "temperature",
+    "documentation": {
+      "text": "<p>Outdoor temperatures related to human comfort and risk levels.</p>\n<p>Note that this works best when using apparent (or <a href=\"https://en.wikipedia.org/wiki/Wet-bulb_temperature\" rel=\"noopener\" target=\"_blank\">wet bulb</a>)\ntemperature and taking wind chill into account, not just <a href=\"https://en.wikipedia.org/wiki/Dry-bulb_temperature\" rel=\"noopener\" target=\"_blank\">dry bulb</a>\ntemperature, such as a like a thermometer reading.</p>\n<p>Individual factors such as clothing, activity level, wind speed and\nexposure to sun all play a part in how we perceive temperature.\nSee this is a rough guideline.</p>"
+    },
+    "key": "outdoor temperature",
+    "name": "Outdoor temperature",
+    "steps": [
+      {
+        "color": "#0f3489",
+        "legend": "Severe risk of frostbite",
+        "value": -30
+      },
+      {
+        "color": "#595ea3",
+        "legend": "Risk of frostbite",
+        "value": 0
+      },
+      {
+        "color": "#7374b0",
+        "legend": "Risk of hypothermia",
+        "value": 10
+      },
+      {
+        "color": "#7374b0",
+        "legend": "Chilling temperatures",
+        "value": 15
+      },
+      {
+        "color": "#F5F5F5",
+        "value": 22
+      },
+      {
+        "color": "#F5F5F5",
+        "value": 27
+      },
+      {
+        "color": "#ea755a",
+        "legend": "Risk of heat cramps or exhaustion",
+        "value": 32
+      },
+      {
+        "color": "#cf0000",
+        "legend": "Heat exhaustion more likely",
+        "value": 40
+      },
+      {
+        "color": "#5b0f8c",
+        "legend": "Heat stroke risk",
+        "value": 54
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b0C"
+  },
+  {
+    "device_class": "pm25",
+    "documentation": {
+      "text": "<p>This scale is based on an aggregate of the World Health Organization\n<a href=\"https://www.who.int/publications/i/item/9789240034228\" rel=\"noopener\" target=\"_blank\">global air quality guidelines</a> \nand <a href=\"https://www.who.int/publications/i/item/9789240000278\" rel=\"noopener\" target=\"_blank\">Personal interventions and risk communication on Air Pollution</a>\nreports.</p>\n<p>The lowest part of the range map to the AQG (Air Quality Goal)\ntarget, a PM<sub>2.5</sub> level of &lt;5 \u03bcg/m<sup>3</sup> which is considered relatively safe.\nThe upper part, &gt;100 \u03bcg/m<sup>3</sup>, is considered the level where the \nhealth benefits of regular physical activity is greatly offset by the\nPM<sub>2.5</sub> exposure.</p>\n<p>Note that the level of &lt;5 \u03bcg/m<sup>3</sup> is the AQG exposure\nlevel on an annaul basis. The WHO also has a 24-hour AQG level of\n&lt;15 \u03bcg/m<sup>3</sup> which is not included in this scale. As we're\ntrending patterns over time, the annual target made more sense for\nthe heatmap.</p>"
+    },
+    "key": "pm25",
+    "name": "PM2.5 (WHO aggregate)",
+    "steps": [
+      {
+        "color": "#6d9b17",
+        "legend": "AQG level",
+        "value": 5
+      },
+      {
+        "color": "#FFBF00",
+        "legend": "Interim target 2",
+        "value": 25
+      },
+      {
+        "color": "#cf0000",
+        "value": 50
+      },
+      {
+        "color": "#5b0f8c",
+        "legends": "Risk level",
+        "value": 100
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
+  },
+  {
+    "key": "stoplight",
+    "name": "Stoplight",
+    "steps": [
+      {
+        "color": "#6d9b17",
+        "value": 0
+      },
+      {
+        "color": "#fde74c",
+        "value": 0.5
+      },
+      {
+        "color": "#cf0000",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "key": "white hot",
+    "name": "White hot",
+    "steps": [
+      {
+        "color": "#242124",
+        "value": 0
+      },
+      {
+        "color": "#F5F5F5",
+        "value": 1
+      }
+    ],
+    "type": "relative"
+  },
+  {
+    "device_class": "temperature",
+    "documentation": {
+      "license": {
+        "name": "Creative Commons Attribution-ShareAlike License 3.0",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0/"
+      },
+      "text": "<p>Wikipedia's <a href=\"https://en.wikipedia.org/wiki/Module:Weather\" rel=\"noopener\" target=\"_blank\">Weather</a> template temperature graph color scheme, cool2 version.\nSlightly modified by setting the minimum to -60\u00b0C, instead of -90\u00b0C.</p>"
+    },
+    "key": "wikipedia climate cool2",
+    "name": "Wikipedia climate, cool2",
+    "steps": [
+      {
+        "color": "#0000A2",
+        "value": -60
+      },
+      {
+        "color": "#0000D7",
+        "value": -43
+      },
+      {
+        "color": "#6565FF",
+        "value": -24
+      },
+      {
+        "color": "#FCFCFF",
+        "value": 4
+      },
+      {
+        "color": "#FF7F00",
+        "value": 23
+      },
+      {
+        "color": "#FF2C00",
+        "value": 35
+      },
+      {
+        "color": "#F60000",
+        "value": 42
+      },
+      {
+        "color": "#000000",
+        "value": 56
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b0C"
+  }
+]

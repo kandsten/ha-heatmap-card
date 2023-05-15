@@ -1,0 +1,30 @@
+name: Wikipedia climate, cool2
+type: absolute
+device_class: temperature
+unit: °C
+steps:
+  - value: -60
+    color: "#0000A2"
+  - value: -43
+    color: "#0000D7"
+  - value: -24
+    color: "#6565FF"
+  - value: 4
+    color: "#FCFCFF"
+  - value: 23
+    color: "#FF7F00"
+  - value: 35
+    color: "#FF2C00"
+  - value: 42
+    color: "#F60000"
+  - value: 56
+    color: "#000000"
+documentation:
+  text:
+    Wikipedia's [Weather](https://en.wikipedia.org/wiki/Module:Weather)
+    template temperature graph color scheme, cool2 version.
+    
+    Slightly modified by setting the minimum to -60°C, instead of -90°C.
+  license:
+    name: Creative Commons Attribution-ShareAlike License 3.0
+    url: https://creativecommons.org/licenses/by-sa/3.0/

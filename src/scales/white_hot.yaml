@@ -1,0 +1,7 @@
+name: White hot
+type: relative
+steps:
+  - value: 0
+    color: "#242124"
+  - value: 1
+    color: "#F5F5F5"

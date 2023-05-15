@@ -1,0 +1,25 @@
+name: Indoor temperature
+type: absolute
+device_class: temperature
+unit: °C
+steps:
+  - value: 12
+    color: "#0f3489"
+  - value: 16
+    color: "#595ea3"
+  - value: 18
+    color: "#7374b0"
+  - value: 20
+    color: "#F5F5F5"
+  - value: 22
+    color: "#F5F5F5"
+  - value: 24
+    color: "#ea755a"
+  - value: 28
+    color: "#cf0000"
+documentation:
+  text: |
+    Indoor temperatures related to human comfort levels. Amalgation
+    of multiple sources. As always with temperature, individual
+    factors such as generics, clothing and activity level have a big
+    impact.

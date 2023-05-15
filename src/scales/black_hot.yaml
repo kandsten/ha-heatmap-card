@@ -1,0 +1,7 @@
+name: Black hot
+type: relative
+steps:
+  - value: 0
+    color: "#F5F5F5"
+  - value: 1
+    color: "#242124"

@@ -308,6 +308,29 @@ export class HeatmapCardEditor extends LitElement {
         }
     }
 
+    render_entity_warning() {
+        if (this.entity === undefined) { return; }
+        console.log(this.entity);
+        if (this.entity.attributes?.state_class === undefined ||
+            ['measurement', 'total', 'total_increasing'].includes(this.entity.attributes?.state_class) === false
+            ) {
+                return html`
+                    <ha-alert
+                        .title=${"Warning"}
+                        .type=${"warning"}
+                        own-margin
+                    >
+                        <div>
+                            <p>This entity has a <code>state_class</code> attribute set to
+                            <i>${this.entity.attributes?.state_class ?? 'undefined'}</i>.</p>
+                            <p>This means that data won't be saved to Long Term Statistics, which
+                            we use to drive the heatmap; no results will be shown.</p>
+                        </div>
+                    </ha-alert>
+                `
+        }
+    }
+
     render() {
         if (this.myhass === undefined || this._config === undefined) { return; }
     
@@ -320,6 +343,7 @@ export class HeatmapCardEditor extends LitElement {
                 .configValue=${"entity"}
                 .includeDomains=${"sensor"}
             ></ha-entity-picker>
+            ${this.render_entity_warning()}
             ${this.render_device_class_picker()}
             <ha-textfield
                 .label=${"Days"}

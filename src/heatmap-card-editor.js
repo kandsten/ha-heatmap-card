@@ -310,7 +310,6 @@ export class HeatmapCardEditor extends LitElement {
 
     render_entity_warning() {
         if (this.entity === undefined) { return; }
-        console.log(this.entity);
         if (this.entity.attributes?.state_class === undefined ||
             ['measurement', 'total', 'total_increasing'].includes(this.entity.attributes?.state_class) === false
             ) {
@@ -333,7 +332,7 @@ export class HeatmapCardEditor extends LitElement {
 
     render() {
         if (this.myhass === undefined || this._config === undefined) { return; }
-    
+
         return html`
         <div class="root card-config">
             <ha-entity-picker

@@ -284,6 +284,7 @@ export class HeatmapCard extends LitElement {
                     case 'measurement':
                         this.grid = this.calculate_measurement_values(consumerData);
                         break;
+                    case 'total':
                     case 'total_increasing':
                         this.grid = this.calculate_increasing_values(consumerData);
                         break;

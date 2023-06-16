@@ -34,6 +34,21 @@ const css = LitElement.prototype.css;
 
 import { HeatmapScales } from './heatmap-scales.js';
 
+const Periods = [
+    {
+        recorder: "5minute",
+        // text: "5min",
+        // interval: 5,
+        steps: 12
+    },
+    {
+        recorder: "hour",
+        // text: "hourly",
+        // interval: 60,
+        steps: 1
+    }
+]
+
 export class HeatmapCard extends LitElement {
     hass_inited = false;
     scales = new HeatmapScales();
@@ -48,10 +63,13 @@ export class HeatmapCard extends LitElement {
             selected_element_data: ''
         };
     }
+    period = Periods[1];
+    headers = [];
 
     render() {
         // We may be trying to render before we've received the recorder data.
         if (this.grid === undefined) { this.grid = []; }
+
         return html`
             <ha-card header="${this.meta.title}" id="card">
                 <div class="card-content">
@@ -95,15 +113,15 @@ export class HeatmapCard extends LitElement {
     date_table_headers() {
         if (this.myhass.locale.time_format === '12') {
             return html`
-                <th>12<br/>AM</th><th>·</th><th>·</th><th>·</th><th>4<br/>AM</th><th>·</th><th>·</th><th>·</th>
-                <th>8<br/>AM</th><th>·</th><th>·</th><th>·</th><th>12<br/>PM</th><th>·</th><th>·</th><th>·</th>
-                <th>4<br/>PM</th><th>·</th><th>·</th><th>·</th><th>8<br/>PM</th><th>·</th><th>·</th><th>11<br/>PM</th>
-            `            
+                <th colspan="${this.period.steps}">12<br/>AM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">4<br/>AM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th>
+                <th colspan="${this.period.steps}">8<br/>AM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">12<br/>PM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th>
+                <th colspan="${this.period.steps}">4<br/>PM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">8<br/>PM</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">11<br/>PM</th>
+            `
         } else {
             return html`
-                <th>00</th><th>·</th><th>·</th><th>·</th><th>04</th><th>·</th><th>·</th><th>·</th>
-                <th>08</th><th>·</th><th>·</th><th>·</th><th>12</th><th>·</th><th>·</th><th>·</th>
-                <th>16</th><th>·</th><th>·</th><th>·</th><th>20</th><th>·</th><th>·</th><th>23</th>
+                <th colspan="${this.period.steps}">00</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">04</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th>
+                <th colspan="${this.period.steps}">08</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">12</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th>
+                <th colspan="${this.period.steps}">16</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">20</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">·</th><th colspan="${this.period.steps}">23</th>
             `
         }
     }
@@ -139,9 +157,10 @@ export class HeatmapCard extends LitElement {
         if (this.selected_element_data) {
             // Todo: See if we can use the precision from the entity here.
             const date = this.grid[this.selected_element_data.row]?.date;
-            const hr = parseInt(this.selected_element_data.col);
-            var from = new Date('2022-03-20 00:00:00').setHours(hr);
-            var to = new Date('2022-03-20 00:00:00').setHours(hr + 1);
+            const step = parseInt(this.selected_element_data.col);
+            const mins = step * Math.round(60 / this.period.steps);
+            var from = new Date('2022-03-20 00:00:00').setMinutes(mins);
+            var to = new Date('2022-03-20 00:00:00').setMinutes(mins + Math.round(60 / this.period.steps));
             var rendered_value;
             // selected_val is read via the data-val attribute in the DOM. The way it's set via Lit,
             // null translates into ''.
@@ -232,6 +251,7 @@ export class HeatmapCard extends LitElement {
         if (this.hass_inited === true) { return }
         this.myhass = hass;
         this.meta = this.populate_meta(hass);
+        if (this.meta.high_res == 'true') this.period = Periods[0];
         var consumers = [this.config.entity];
         this.get_recorder(consumers, this.config.days);
         this.hass_inited = true;
@@ -264,13 +284,13 @@ export class HeatmapCard extends LitElement {
         this.myhass.callWS({
             'type': 'recorder/statistics_during_period',
             'statistic_ids': consumers,
-            "period":"hour",
+            "period": this.period.recorder,
             "units": {
-                "energy":"kWh",
+                "energy": "kWh",
                 "temperature": this.myhass.config.unit_system.temperature
             },
             "start_time": startTime.toISOString(),
-            "types":["sum", "mean"]
+            "types": ["sum", "mean"]
         }).then(recorderResponse => {
             /* Todo: Intermediate grouping step for supporting multiple entities */
             for (const consumer of consumers) {
@@ -324,24 +344,26 @@ export class HeatmapCard extends LitElement {
         var grid = [];
         var gridTemp = [];
         var prevDate = null;
-        var hour;
+        var step;
+        var interval = Math.round(60 / this.period.steps);
+
         for (const entry of consumerData) {
             const start = new Date(entry.start);
-            hour = start.getHours();
+            step = start.getHours() * this.period.steps + Math.round(start.getMinutes() / interval);
             const dateRep = start.toLocaleDateString(this.meta.language, {month: 'short', day: '2-digit'});
 
             if (dateRep !== prevDate && prevDate !== null) {
-                gridTemp = Array(24).fill(null);
+                gridTemp = Array(24 * this.period.steps).fill(null);
                 grid.push({'date': dateRep, 'nativeDate': start, 'vals': gridTemp});
             }
-            gridTemp[hour] = entry.mean;
+            gridTemp[step] = entry.mean;
             prevDate = dateRep;
         }
         /*
             For the last date in the series, remove any entries that we didn't get from
             Home Assistant. This would typically be hours set in the future.
         */
-        gridTemp.splice(hour + 1);
+        gridTemp.splice(step + 1);
         return grid.reverse();
     }
 
@@ -361,20 +383,25 @@ export class HeatmapCard extends LitElement {
         var grid = [];
         var prev = null;
         var gridTemp = [];
-        var prevDate = null; 
-        var hour;
+        var prevDate = null;
+        var step;
+        var interval = Math.round(60 / this.period.steps);
+        if (this.meta.smoothing) {
+            consumerData = this.smooth_consumer_data(consumerData);
+        }
+
         for (const entry of consumerData) {
             const start = new Date(entry.start);
-            hour = start.getHours();
+            step = start.getHours() * this.period.steps + Math.round(start.getMinutes() / interval);
             const dateRep = start.toLocaleDateString(this.meta.language, {month: 'short', day: '2-digit'});
 
             if (dateRep !== prevDate && prev !== null) {
-                gridTemp = Array(24).fill(0);
+                gridTemp = Array(24 * this.period.steps).fill(0);
                 grid.push({'date': dateRep, 'nativeDate': start, 'vals': gridTemp});
             }
             if (prev !== null) {
                 var util = (entry.sum - prev).toFixed(2);
-                gridTemp[hour] = util
+                gridTemp[step] = util
             }
             prev = entry.sum;
             prevDate = dateRep;
@@ -383,8 +410,58 @@ export class HeatmapCard extends LitElement {
             For the last date in the series, remove any entries that we didn't get from
             Home Assistant. This would typically be hours set in the future.
         */
-        gridTemp.splice(hour + 1);
+        gridTemp.splice(step + 1);
         return grid.reverse();
+    }
+
+    smooth_consumer_data(data) {
+        // return data;
+
+        // Make a deep copy of the data
+        let newData = JSON.parse(JSON.stringify(data));
+
+        // Calculate the total change in 'sum' over time
+        let totalChange = data[data.length - 1].sum - data[0].sum;
+
+        // Identify plateaus and store their start and end indices
+        let plateaus = [];
+        let start = 0;
+        for (let i = 1; i < data.length; i++) {
+            if (data[i].sum !== data[start].sum) {
+                plateaus.push({start, end: i - 1});
+                start = i;
+            }
+        }
+        plateaus.push({start, end: data.length - 1});  // Last plateau
+
+        // Go through each plateau, calculate the sum change and distribute it evenly across the plateau
+        let currentSum = data[0].sum;
+        for (let p = 0; p < plateaus.length - 1; p++) {
+            let plateau = plateaus[p];
+            let nextPlateauStartSum = data[plateaus[p + 1].start].sum;
+            let sumChange = nextPlateauStartSum - currentSum;
+
+            let plateauLength = plateau.end - plateau.start + 1;
+            let adjustment = sumChange / plateauLength;
+
+            // Distribute the sum change evenly across the plateau
+            for (let i = plateau.start; i <= plateau.end; i++) {
+                newData[i].sum = currentSum + adjustment * (i - plateau.start);
+                // Round to the nearest 0.01 to match sensor resolution
+                newData[i].sum = Math.round(newData[i].sum * 100) / 100;
+            }
+
+            // Update currentSum to be the start of the next plateau
+            currentSum = nextPlateauStartSum;
+        }
+
+        // Verify that the total change over time is maintained
+        let newTotalChange = newData[newData.length - 1].sum - newData[0].sum;
+        if (Math.abs(totalChange - newTotalChange) > 0.01) {
+            throw new Error('Total change over time is not maintained.');
+        }
+
+        return newData;
     }
 
     populate_meta(hass) {
@@ -405,6 +482,8 @@ export class HeatmapCard extends LitElement {
                 'max': this.config.data.max,
                 'min': this.config.data.min
             },
+            'smoothing': this.config.smoothing,
+            'high_res': this.config.high_res
         };
         return meta;
     }
@@ -428,23 +507,25 @@ export class HeatmapCard extends LitElement {
             'entity': config.entity,
             'scale': config.scale,
             'data': (config.data ?? {}),
-            'display': (config.display ?? {})
+            'display': (config.display ?? {}),
+            'smoothing': (config.smoothing ?? false),
+            'high_res':  (config.high_res ?? false)
         };
-        if (this.config.data.max !== undefined && 
-            (this.config.data.max !== 'auto' && 
+        if (this.config.data.max !== undefined &&
+            (this.config.data.max !== 'auto' &&
             typeof(this.config.data.max) !== 'number')
         ) {
             throw new Error("`data.max` need to be either `auto` or a number");
         }
-        if (this.config.data.min !== undefined && 
-            (this.config.data.min !== 'auto' && 
+        if (this.config.data.min !== undefined &&
+            (this.config.data.min !== 'auto' &&
             typeof(this.config.data.min) !== 'number')
         ) {
             throw new Error("`data.min` need to be either `auto` or a number");
         }
         this.hass_inited = false;
     }
-  
+
     // The height of your card. Home Assistant uses this to automatically
     // distribute all cards over the available columns.
     getCardSize() {
@@ -591,5 +672,5 @@ export class HeatmapCard extends LitElement {
 
     static getConfigElement() {
         return document.createElement("heatmap-card-editor");
-      }
+    }
 }

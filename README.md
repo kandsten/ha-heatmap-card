@@ -16,7 +16,7 @@ Will pick a hopefully useful scale out of the box based on your type of data ([D
 ### HACS
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=kandsten&repository=ha-heatmap-card&category=Lovelace)
 
-If you use [HACS](https://hacs.xyz) as-is, this card can be added as a **custom repository**. 
+If you use [HACS](https://hacs.xyz) as-is, this card can be added as a **custom repository**.
 
 (As always, you should be careful with software which lets you pull random code from the Internet and run it)
 
@@ -41,6 +41,17 @@ While setting min/max _is_ optional, it's encouraged to do so where possible, as
   <img width="300" alt="A Heat map of solar energy generation" src="images/relative_scales.png">
 </p>
 
+_High resolution_
+
+Loads 5 minutes data, but this data is usually purged after 10 days. Check `recorder.purge_keep_days` for more information.
+
+_Smooth low-precision data_ *
+
+If for example your kWh energy sensor is 2 digit precision only but the average energy consumption per interval (hour or 5 minutes) is much lower, then you can use this flag to average the value (e.g. 0.01 kWh) over the previous plateau with zero values.
+
+<sup>* `total` and `total_increasing` sensors only</sup>
+
+
 ## Configuration using YAML
 ### Minimal example
 <img align="right" width="300" alt="A temperature display heat map" src="images/temperature.png">
@@ -52,10 +63,10 @@ type: custom:heatmap-card
 entity: sensor.aranet_uppe_temperature
 ```
 
-It'll pick a card `title` based on the name of the entity, present the default 21 days worth of 
+It'll pick a card `title` based on the name of the entity, present the default 21 days worth of
 data and pick a color scheme and scale based on the entity [device type](https://www.home-assistant.io/integrations/sensor/).
 
-It's a bit opinionated in what a "good" scale will be, and _may_ give you something that's not really 
+It's a bit opinionated in what a "good" scale will be, and _may_ give you something that's not really
 fit for your usage (for instance by assuming that temperature sensor data refers to _indoor_ temperature).
 
 This can be solved by picking a scale explicitly instead.
@@ -142,7 +153,15 @@ scale:
       color: '#FF00FF'
 ```
 
+## Build
+
+```
+pip install -r requirements.txt
+npm install
+npm run build
+```
 
 ## General thanks
 * [Home Assistant](https://www.home-assistant.io/) is nifty and I  appreciate the work that has gone into making sure that data is standardized and decorated in a sane way. A gadget like this card would be much harder without that effort as a foundation.
 * [chroma-js](https://gka.github.io/chroma.js/) for the heavy lifting of color related operations.
+

@@ -1,7 +1,8 @@
 {
   "scripts": {
     "prebuild": "python3 build/rollup_scales.py",
-    "build": "esbuild src/heatmap-card-anchor.js --loader:.json=json --bundle --minify --outfile=heatmap-card.js"
+    "build": "esbuild src/heatmap-card-anchor.js --loader:.json=json --bundle --minify --outfile=heatmap-card.js",
+    "build:debug": "esbuild src/heatmap-card-anchor.js --loader:.json=json --bundle --outfile=heatmap-card.js"
   },
   "dependencies": {
     "esbuild": "^0.17.18"

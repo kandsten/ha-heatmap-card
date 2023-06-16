@@ -21,9 +21,9 @@ import device_classes from './device_classes.json';
 
                   Calls a lot of section specific render helper functions.
 
-      - setConfig(): As opposed to in the card view (non-editor), we don't 
+      - setConfig(): As opposed to in the card view (non-editor), we don't
                      bother with a lot of config validation.
-    
+
     * The editor view *
 
     - Hide most fields until we've got `entity` picked out; without the entity,
@@ -33,7 +33,7 @@ import device_classes from './device_classes.json';
       for the device class. Ideally they'd set it in the entity config in HA
       instead. May at some point change the behavior of this card to mandate
       that over accepting an override in the card config.
- 
+
     - Based on the device class, suggest a scale. We split them into absolute
       scales for things like VOC, Carbon Dioxide and similar and relative scales
       for f.x power generation, energy usage. Additionally, the user can supply
@@ -42,7 +42,7 @@ import device_classes from './device_classes.json';
 
     - The relative tab has inputs for max/min values in the input data; will
       either be supplied by the user or inferred from the data.
-    
+
     - There's a `Card elements` section for showing/hiding/customizing card
       elements beyond the heatmap itself. Largely unused for now.
 
@@ -91,6 +91,8 @@ export class HeatmapCardEditor extends LitElement {
         this.entity = this.myhass.states[this._config.entity];
         this.device_class = (this.entity && this.entity.attributes.device_class) ?? this._config.device_class;
         this.scale = this.scales.get_scale(this._config.scale)
+        this.smoothing = this._config.smoothing ?? 'false';
+        this.high_res = this._config.high_res ?? 'false';
 
         /* Once we have a scale, set the currently active tab to whatever matches it. */
         if (this.active_tab === undefined && this._config.scale) {
@@ -244,7 +246,7 @@ export class HeatmapCardEditor extends LitElement {
             value: scale.key,
             css: scale.css
         }});
-    
+
         if (typeof(this._config.scale) === 'object') {
             scale_picker = html`Using a custom scale, picker disabled`;
         } else {
@@ -363,6 +365,23 @@ export class HeatmapCardEditor extends LitElement {
                 .configValue=${"title"}
                 @input=${this.update_field}
                 ></ha-textfield>
+            <ha-formfield .label=${"High resolution (usually only 10 days kept)"} @change=${this.update_field}>
+                <ha-checkbox
+                    .label=${"High resolution"}
+                    .checked=${this._config.high_res === 'true' }
+                    .value=${"true"}
+                    .configValue=${"high_res"}
+                ></ha-checkbox>
+            </ha-formfield>
+            <ha-formfield .label=${"Smooth low-precision data"} @change=${this.update_field}>
+                <ha-checkbox
+                    .label=${"Smoothing"}
+                    .checked=${this._config.smoothing === 'true' }
+                    .disabled=${['total', 'total_increasing'].includes(this.entity?.attributes?.state_class) ? '' : 'disabled'}
+                    .value=${"true"}
+                    .configValue=${"smoothing"}
+                ></ha-checkbox>
+            </ha-formfield>
         </div>`
     }
 

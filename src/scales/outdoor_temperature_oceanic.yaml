@@ -1,0 +1,42 @@
+name: Outdoor temperature (Oceanic Climate)
+type: absolute
+device_class: temperature
+unit: °C
+steps:
+  - value: -10
+    legend: Exceptionally cold for oceanic climate
+    color: "#112488"
+  - value: -5
+    legend: Very cold for oceanic climate
+    color: "#1846A1"
+  - value: 0
+    legend: Freezing
+    color: "#1F67C0"
+  - value: 5
+    legend: Cold
+    color: "#4CA9D5"
+  - value: 10
+    legend: Cool
+    color: "#81DB7D"
+  - value: 15
+    legend: Mild
+    color: "#B5DA60"
+  - value: 20
+    legend: Pleasant
+    color: "#E0DD4A"
+  - value: 25
+    legend: Warm
+    color: "#F98F46"
+  - value: 30
+    legend: Very warm for oceanic climate
+    color: "#F5392A"
+  - value: 35
+    legend: Exceptionally hot for oceanic climate
+    color: "#BE31B1"
+documentation:
+  text: |
+    Temperature scale specifically designed for oceanic climates - regions characterized 
+    by mild temperatures with rare extremes throughout the year.
+
+    Found in areas such as Western Europe, the Pacific Northwest of North America, 
+    parts of Southern Chile, New Zealand, and other coastal regions under maritime influence.

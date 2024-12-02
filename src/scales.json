@@ -691,5 +691,82 @@
     ],
     "type": "absolute",
     "unit": "\u00b0C"
+  },
+  {
+    "device_class": "wind_speed",
+    "documentation": {
+      "text": "<p>Wind speed scale based on the Beaufort scale, developed in 1805 by Sir Francis Beaufort.</p>\n<p>The scale ranges from 0 (Calm) to 12 (Hurricane force) and is the standard \nmeasurement for maritime and meteorological wind observations worldwide.</p>"
+    },
+    "key": "wind speed beaufort",
+    "name": "Wind Speed (Beaufort Scale)",
+    "steps": [
+      {
+        "color": "#FFFFFF",
+        "legend": "Calm - Smoke rises vertically",
+        "value": 0
+      },
+      {
+        "color": "#AEF1F9",
+        "legend": "Light air - Smoke drift shows direction",
+        "value": 0.3
+      },
+      {
+        "color": "#96F7DC",
+        "legend": "Light breeze - Leaves rustle, wind vanes move",
+        "value": 1.6
+      },
+      {
+        "color": "#96F7B4",
+        "legend": "Gentle breeze - Leaves in constant motion",
+        "value": 3.4
+      },
+      {
+        "color": "#6FF46F",
+        "legend": "Moderate breeze - Small branches move",
+        "value": 5.5
+      },
+      {
+        "color": "#73ED12",
+        "legend": "Fresh breeze - Small trees sway",
+        "value": 8.0
+      },
+      {
+        "color": "#A4ED12",
+        "legend": "Strong breeze - Large branches move",
+        "value": 10.8
+      },
+      {
+        "color": "#DAED12",
+        "legend": "Near gale - Whole trees in motion",
+        "value": 13.9
+      },
+      {
+        "color": "#EDC212",
+        "legend": "Gale - Twigs break off trees",
+        "value": 17.2
+      },
+      {
+        "color": "#ED8F12",
+        "legend": "Strong gale - Structural damage possible",
+        "value": 20.8
+      },
+      {
+        "color": "#ED6312",
+        "legend": "Storm - Trees uprooted",
+        "value": 24.5
+      },
+      {
+        "color": "#ED2912",
+        "legend": "Violent storm - Widespread damage",
+        "value": 28.5
+      },
+      {
+        "color": "#D5102D",
+        "legend": "Hurricane force - Devastating damage",
+        "value": 32.7
+      }
+    ],
+    "type": "absolute",
+    "unit": "m/s"
   }
 ]

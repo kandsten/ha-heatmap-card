@@ -1,0 +1,50 @@
+name: Wind Speed (Beaufort Scale)
+type: absolute
+device_class: wind_speed
+unit: m/s
+steps:
+  - value: 0
+    legend: Calm - Smoke rises vertically
+    color: "#FFFFFF"
+  - value: 0.3
+    legend: Light air - Smoke drift shows direction
+    color: "#AEF1F9"
+  - value: 1.6
+    legend: Light breeze - Leaves rustle, wind vanes move
+    color: "#96F7DC"
+  - value: 3.4
+    legend: Gentle breeze - Leaves in constant motion
+    color: "#96F7B4"
+  - value: 5.5
+    legend: Moderate breeze - Small branches move
+    color: "#6FF46F"
+  - value: 8.0
+    legend: Fresh breeze - Small trees sway
+    color: "#73ED12"
+  - value: 10.8
+    legend: Strong breeze - Large branches move
+    color: "#A4ED12"
+  - value: 13.9
+    legend: Near gale - Whole trees in motion
+    color: "#DAED12"
+  - value: 17.2
+    legend: Gale - Twigs break off trees
+    color: "#EDC212"
+  - value: 20.8
+    legend: Strong gale - Structural damage possible
+    color: "#ED8F12"
+  - value: 24.5
+    legend: Storm - Trees uprooted
+    color: "#ED6312"
+  - value: 28.5
+    legend: Violent storm - Widespread damage
+    color: "#ED2912"
+  - value: 32.7
+    legend: Hurricane force - Devastating damage
+    color: "#D5102D"
+documentation:
+  text: |
+    Wind speed scale based on the Beaufort scale, developed in 1805 by Sir Francis Beaufort.
+    
+    The scale ranges from 0 (Calm) to 12 (Hurricane force) and is the standard 
+    measurement for maritime and meteorological wind observations worldwide.

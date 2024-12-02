@@ -1,0 +1,28 @@
+name: Sulphur dioxide (European Air Quality Index)
+type: absolute
+device_class: sulphur_dioxide
+unit: µg/m³
+steps:
+  - value: 0
+    legend: Good
+    color: "#50F0E6"
+  - value: 100
+    legend: Fair
+    color: "#50CCAA"
+  - value: 200
+    legend: Moderate
+    color: "#F0E641"
+  - value: 350
+    legend: Poor
+    color: "#FF5050"
+  - value: 500
+    legend: Very poor
+    color: "#960032"
+  - value: 750
+    legend: Extremely poor
+    color: "#7D2181"
+documentation:
+  text: |
+    This scale is based on the European Environment Agency (EEA) Air Quality Index
+    as implemented in their [official interactive map](https://airindex.eea.europa.eu)
+    as of late 2024.

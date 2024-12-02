@@ -1,0 +1,28 @@
+name: Nitrogen dioxide (European Air Quality Index)
+type: absolute
+device_class: nitrogen_dioxide
+unit: µg/m³
+steps:
+  - value: 0
+    legend: Good
+    color: "#50F0E6"
+  - value: 40
+    legend: Fair
+    color: "#50CCAA"
+  - value: 90
+    legend: Moderate
+    color: "#F0E641"
+  - value: 120
+    legend: Poor
+    color: "#FF5050"
+  - value: 230
+    legend: Very poor
+    color: "#960032"
+  - value: 340
+    legend: Extremely poor
+    color: "#7D2181"
+documentation:
+  text: |
+    This scale is based on the European Environment Agency (EEA) Air Quality Index
+    as implemented in their [official interactive map](https://airindex.eea.europa.eu)
+    as of late 2024.

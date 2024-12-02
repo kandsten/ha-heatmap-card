@@ -253,6 +253,48 @@
     "type": "relative"
   },
   {
+    "device_class": "nitrogen_dioxide",
+    "documentation": {
+      "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"
+    },
+    "key": "nitrogen dioxide eaqi",
+    "name": "Nitrogen dioxide (European Air Quality Index)",
+    "steps": [
+      {
+        "color": "#50F0E6",
+        "legend": "Good",
+        "value": 0
+      },
+      {
+        "color": "#50CCAA",
+        "legend": "Fair",
+        "value": 40
+      },
+      {
+        "color": "#F0E641",
+        "legend": "Moderate",
+        "value": 90
+      },
+      {
+        "color": "#FF5050",
+        "legend": "Poor",
+        "value": 120
+      },
+      {
+        "color": "#960032",
+        "legend": "Very poor",
+        "value": 230
+      },
+      {
+        "color": "#7D2181",
+        "legend": "Extremely poor",
+        "value": 340
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
+  },
+  {
     "device_class": "temperature",
     "documentation": {
       "text": "<p>Outdoor temperatures related to human comfort and risk levels.</p>\n<p>Note that this works best when using apparent (or <a href=\"https://en.wikipedia.org/wiki/Wet-bulb_temperature\" rel=\"noopener\" target=\"_blank\">wet bulb</a>)\ntemperature and taking wind chill into account, not just <a href=\"https://en.wikipedia.org/wiki/Dry-bulb_temperature\" rel=\"noopener\" target=\"_blank\">dry bulb</a>\ntemperature, such as a like a thermometer reading.</p>\n<p>Individual factors such as clothing, activity level, wind speed and\nexposure to sun all play a part in how we perceive temperature.\nSee this is a rough guideline.</p>"
@@ -308,6 +350,90 @@
     "unit": "\u00b0C"
   },
   {
+    "device_class": "ozone",
+    "documentation": {
+      "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"
+    },
+    "key": "ozone eaqi",
+    "name": "Ozone (European Air Quality Index)",
+    "steps": [
+      {
+        "color": "#50F0E6",
+        "legend": "Good",
+        "value": 0
+      },
+      {
+        "color": "#50CCAA",
+        "legend": "Fair",
+        "value": 50
+      },
+      {
+        "color": "#F0E641",
+        "legend": "Moderate",
+        "value": 100
+      },
+      {
+        "color": "#FF5050",
+        "legend": "Poor",
+        "value": 130
+      },
+      {
+        "color": "#960032",
+        "legend": "Very poor",
+        "value": 240
+      },
+      {
+        "color": "#7D2181",
+        "legend": "Extremely poor",
+        "value": 380
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
+  },
+  {
+    "device_class": "pm10",
+    "documentation": {
+      "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"
+    },
+    "key": "pm10 eaqi",
+    "name": "PM10 (European Air Quality Index)",
+    "steps": [
+      {
+        "color": "#50F0E6",
+        "legend": "Good",
+        "value": 0
+      },
+      {
+        "color": "#50CCAA",
+        "legend": "Fair",
+        "value": 20
+      },
+      {
+        "color": "#F0E641",
+        "legend": "Moderate",
+        "value": 40
+      },
+      {
+        "color": "#FF5050",
+        "legend": "Poor",
+        "value": 50
+      },
+      {
+        "color": "#960032",
+        "legend": "Very poor",
+        "value": 100
+      },
+      {
+        "color": "#7D2181",
+        "legend": "Extremely poor",
+        "value": 150
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
+  },
+  {
     "device_class": "pm25",
     "documentation": {
       "text": "<p>This scale is based on an aggregate of the World Health Organization\n<a href=\"https://www.who.int/publications/i/item/9789240034228\" rel=\"noopener\" target=\"_blank\">global air quality guidelines</a> \nand <a href=\"https://www.who.int/publications/i/item/9789240000278\" rel=\"noopener\" target=\"_blank\">Personal interventions and risk communication on Air Pollution</a>\nreports.</p>\n<p>The lowest part of the range map to the AQG (Air Quality Goal)\ntarget, a PM<sub>2.5</sub> level of &lt;5 \u03bcg/m<sup>3</sup> which is considered relatively safe.\nThe upper part, &gt;100 \u03bcg/m<sup>3</sup>, is considered the level where the \nhealth benefits of regular physical activity is greatly offset by the\nPM<sub>2.5</sub> exposure.</p>\n<p>Note that the level of &lt;5 \u03bcg/m<sup>3</sup> is the AQG exposure\nlevel on an annaul basis. The WHO also has a 24-hour AQG level of\n&lt;15 \u03bcg/m<sup>3</sup> which is not included in this scale. As we're\ntrending patterns over time, the annual target made more sense for\nthe heatmap.</p>"
@@ -339,6 +465,48 @@
     "unit": "\u00b5g/m\u00b3"
   },
   {
+    "device_class": "pm25",
+    "documentation": {
+      "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"
+    },
+    "key": "pm25 eaqi",
+    "name": "PM2.5 (European Air Quality Index)",
+    "steps": [
+      {
+        "color": "#50F0E6",
+        "legend": "Good",
+        "value": 0
+      },
+      {
+        "color": "#50CCAA",
+        "legend": "Fair",
+        "value": 10
+      },
+      {
+        "color": "#F0E641",
+        "legend": "Moderate",
+        "value": 20
+      },
+      {
+        "color": "#FF5050",
+        "legend": "Poor",
+        "value": 25
+      },
+      {
+        "color": "#960032",
+        "legend": "Very poor",
+        "value": 50
+      },
+      {
+        "color": "#7D2181",
+        "legend": "Extremely poor",
+        "value": 75
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
+  },
+  {
     "key": "stoplight",
     "name": "Stoplight",
     "steps": [
@@ -356,6 +524,48 @@
       }
     ],
     "type": "relative"
+  },
+  {
+    "device_class": "sulphur_dioxide",
+    "documentation": {
+      "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"
+    },
+    "key": "sulphur dioxide eaqi",
+    "name": "Sulphur dioxide (European Air Quality Index)",
+    "steps": [
+      {
+        "color": "#50F0E6",
+        "legend": "Good",
+        "value": 0
+      },
+      {
+        "color": "#50CCAA",
+        "legend": "Fair",
+        "value": 100
+      },
+      {
+        "color": "#F0E641",
+        "legend": "Moderate",
+        "value": 200
+      },
+      {
+        "color": "#FF5050",
+        "legend": "Poor",
+        "value": 350
+      },
+      {
+        "color": "#960032",
+        "legend": "Very poor",
+        "value": 500
+      },
+      {
+        "color": "#7D2181",
+        "legend": "Extremely poor",
+        "value": 750
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b5g/m\u00b3"
   },
   {
     "key": "white hot",

@@ -59,18 +59,22 @@ export class HeatmapScales {
         We're also doing unit conversion if required; the way this works is that
         we adjust the scale if we need to (frontend unit config differs from
         scale unit config) and we know how to perform the conversion. This is a
-        bit more heavy handed than I'd like, but the alternatives seem messier.
+        bit more heavy-handed than I'd like, but the alternatives seem messier.
 
         No caching done on the output, would need to reconsider that decision
         if the function becomes more expensive. Does get a bit messy since we're
         converting units on the fly.
     */
     generate_scale(config, device_class = undefined, unit_system = {}) {
-        var colors = [];
-        var domains = [];
-        var unit = config.unit;
+        // Custom scales have been observed to be immutable in Home Assistant 2024.11, requiring to be cloned to be modified
+        const steps = JSON.parse(JSON.stringify(config.steps));
+        const colors = [];
+        const domains = [];
+        let unit = config.unit;
+        
         // Default conversion function: Do nothing
-        var conversion_fn = (val) => val;
+        let conversion_fn = (val) => val;
+        
         // dc_domain = the key in the unit_system object that is relevant
         // for the given device class.
         // TODO: See if this can be simplified. It's a bit more code than
@@ -88,25 +92,28 @@ export class HeatmapScales {
                     conversion_fn = conversions[dc_domain][config.unit][us_unit]
             }
         }
-        for (const step of config.steps) {
+        
+        for (const step of steps) {
             colors.push(step.color);
             if ('value' in step) {
                 step.value = conversion_fn(step.value)
                 domains.push(step.value)
             }
         }
-        var gradient;
-        if (domains.length > 0 && domains.length == colors.length) {
+        
+        let gradient;
+        if (domains.length > 0 && domains.length === colors.length) {
             gradient = chroma.scale(colors).domain(domains);
         } else {
             gradient = chroma.scale(colors);
         }
+        
         return {
             'gradient': gradient,
             'type': config.type ?? 'relative',
             'name': config.name,
             'key': config.key,
-            'steps': config.steps,
+            'steps': steps,
             'unit': unit,
             'docs': config.documentation,
             'css': this.legend_css_by_gradient(gradient)

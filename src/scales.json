@@ -350,6 +350,68 @@
     "unit": "\u00b0C"
   },
   {
+    "device_class": "temperature",
+    "documentation": {
+      "text": "<p>Temperature scale specifically designed for oceanic climates - regions characterized \nby mild temperatures with rare extremes throughout the year.</p>\n<p>Found in areas such as Western Europe, the Pacific Northwest of North America, \nparts of Southern Chile, New Zealand, and other coastal regions under maritime influence.</p>"
+    },
+    "key": "outdoor temperature oceanic",
+    "name": "Outdoor temperature (Oceanic Climate)",
+    "steps": [
+      {
+        "color": "#112488",
+        "legend": "Exceptionally cold for oceanic climate",
+        "value": -10
+      },
+      {
+        "color": "#1846A1",
+        "legend": "Very cold for oceanic climate",
+        "value": -5
+      },
+      {
+        "color": "#1F67C0",
+        "legend": "Freezing",
+        "value": 0
+      },
+      {
+        "color": "#4CA9D5",
+        "legend": "Cold",
+        "value": 5
+      },
+      {
+        "color": "#81DB7D",
+        "legend": "Cool",
+        "value": 10
+      },
+      {
+        "color": "#B5DA60",
+        "legend": "Mild",
+        "value": 15
+      },
+      {
+        "color": "#E0DD4A",
+        "legend": "Pleasant",
+        "value": 20
+      },
+      {
+        "color": "#F98F46",
+        "legend": "Warm",
+        "value": 25
+      },
+      {
+        "color": "#F5392A",
+        "legend": "Very warm for oceanic climate",
+        "value": 30
+      },
+      {
+        "color": "#BE31B1",
+        "legend": "Exceptionally hot for oceanic climate",
+        "value": 35
+      }
+    ],
+    "type": "absolute",
+    "unit": "\u00b0C"
+  },
+  {
     "device_class": "ozone",
     "documentation": {
       "text": "<p>This scale is based on the European Environment Agency (EEA) Air Quality Index\nas implemented in their <a href=\"https://airindex.eea.europa.eu\" rel=\"noopener\" target=\"_blank\">official interactive map</a>\nas of late 2024.</p>"

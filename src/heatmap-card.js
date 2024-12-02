@@ -35,7 +35,7 @@ const css = LitElement.prototype.css;
 import { HeatmapScales } from './heatmap-scales.js';
 
 export class HeatmapCard extends LitElement {
-    hass_inited = false;
+    last_render_ts = 0;
     scales = new HeatmapScales();
     static get properties() {
         return {
@@ -228,13 +228,15 @@ export class HeatmapCard extends LitElement {
         the first time over but generally don't want to update frequently.
     */
     set hass(hass) {
-        // Initialize the content if it's not there yet.
-        if (this.hass_inited === true) { return }
+        if (Date.now() - this.last_render_ts < 10 * 60 * 1000) {
+            return;
+        }
         this.myhass = hass;
         this.meta = this.populate_meta(hass);
         var consumers = [this.config.entity];
         this.get_recorder(consumers, this.config.days);
-        this.hass_inited = true;
+        
+        this.last_render_ts = Date.now();
     }
 
     /*
@@ -442,7 +444,8 @@ export class HeatmapCard extends LitElement {
         ) {
             throw new Error("`data.min` need to be either `auto` or a number");
         }
-        this.hass_inited = false;
+        
+        this.last_render_ts = 0;
     }
   
     // The height of your card. Home Assistant uses this to automatically
